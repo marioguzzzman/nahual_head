@@ -45,7 +45,7 @@ int lastPlayed = 0;
 
 // touch behaviour definitions
 #define firstPin 0
-#define lastPin 9 // 11
+#define lastPin 13 // 11
 
 // sd card instantiation
 SdFat sd;
@@ -70,8 +70,10 @@ float lastProx = 0;
 
 // the electrode to monitor
 //#define ELECTRODE 0
-#define ELECTRODE 0
-#define ELECTRODE 1
+//#define ELECTRODE 0
+//#define ELECTRODE 1
+
+int ELECTRODE_NOW = 0;
 
 //LEDS
 //int ledPins[0] = 10;
@@ -143,7 +145,7 @@ void loop() {
 
   //******THIS IS THE SAME AS LED
   // read the difference between the measured baseline and the measured continuous data
-  int reading = MPR121.getBaselineData(ELECTRODE) - MPR121.getFilteredData(ELECTRODE);
+  int reading = MPR121.getBaselineData(ELECTRODE_NOW) - MPR121.getFilteredData(ELECTRODE_NOW);
 
   // print out the reading value for debug
   Serial.println(reading);
@@ -159,8 +161,8 @@ void loop() {
 
   // output the mapped value to the LED
   // analogWrite(LED_BUILTIN, thisOutput);
-  analogWrite(ledPins[0], thisOutput);
-  analogWrite(ledPins[1], thisOutput);
+ analogWrite(ledPins[ELECTRODE_NOW], thisOutput);
+  //analogWrite(ledPins[1], thisOutput);
 
 }
 
@@ -197,6 +199,7 @@ void readTouchInputs() {
 
 
               } else {
+                ELECTRODE_NOW = i;
                 // if we're already playing a different track (or we're in
                 // REPLAY_MODE), stop and play the newly requested one
                 MP3player.stopTrack();
@@ -219,6 +222,7 @@ void readTouchInputs() {
                 //digitalWrite(ledPins[i], HIGH);
                 // analogWrite(ledPins[i], HIGH);
                 digitalWrite(ledPins[i], HIGH);
+                
                // digitalWrite(ledPins[1], HIGH);
 
 
@@ -236,7 +240,7 @@ void readTouchInputs() {
               // switch on the new LED output
               //digitalWrite(ledPins[i], HIGH);
               // analogWrite(ledPins[i], HIGH);
-              digitalWrite(ledPins[i], HIGH);
+             // digitalWrite(ledPins[i], HIGH);
              // digitalWrite(ledPins[1], HIGH);
 
 
