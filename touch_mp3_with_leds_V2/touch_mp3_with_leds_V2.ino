@@ -45,7 +45,7 @@ int lastPlayed = 0;
 
 // touch behaviour definitions
 #define firstPin 0
-#define lastPin 13 // 11
+#define lastPin 11 // 11
 
 // sd card instantiation
 SdFat sd;
@@ -58,7 +58,7 @@ SdFat sd;
 //11 no funca, 13 parpadea,
 //todas las A funcionan
 
-const int ledPins[3] = {10,11,13};
+const int ledPins[3] = {10, 11, 13};
 //const int ledPins[6] = {5, 6, 9, 10, 11, 13};
 
 
@@ -88,12 +88,16 @@ void setup() {
   //pinMode(LED_BUILTIN, OUTPUT);
   pinMode(ledPins[0], OUTPUT); // initialize the pin
   pinMode(ledPins[1], OUTPUT); // initialize the pin
+  pinMode(ledPins[2], OUTPUT); // initialize the pin
+
 
   //This supplies 5 volts to the LED anode,the positive leg
   //(pin,pwm value)
   //analogWrite(LED_BUILTIN, 0);
   analogWrite(ledPins[0], 0);
   analogWrite(ledPins[1], 0);
+  analogWrite(ledPins[2], 0);
+
 
   //Serial.begin(9600);
   Serial.begin(57600);
@@ -127,6 +131,8 @@ void setup() {
   //digitalWrite(ledPins[i], LOW);
   digitalWrite(ledPins[0], LOW);
   digitalWrite(ledPins[1], LOW);
+  digitalWrite(ledPins[2], LOW);
+
 
 
   // slow down some of the MPR121 baseline filtering to avoid
@@ -161,8 +167,19 @@ void loop() {
 
   // output the mapped value to the LED
   // analogWrite(LED_BUILTIN, thisOutput);
- analogWrite(ledPins[ELECTRODE_NOW], thisOutput);
+  //analogWrite(ledPins[0], 0);
+  //analogWrite(ledPins[1], 0);
+  // analogWrite(ledPins[2], 0);
+
+  analogWrite(ELECTRODE_NOW, thisOutput);
   //analogWrite(ledPins[1], thisOutput);
+  //for (int i = 0; i < 3; i++) {
+  //  if (i == ELECTRODE_NOW) {
+  //  analogWrite(ledPins[ELECTRODE_NOW], thisOutput);
+  // } else {
+  //    analogWrite(ledPins[i], 0);
+  //   }
+  //  }
 
 }
 
@@ -194,7 +211,7 @@ void readTouchInputs() {
                 Serial.println(i - firstPin);
                 // switch off the relevant LED output
                 //                digitalWrite(ledPins[lastPlayed], LOW);
-                digitalWrite(ledPins[i], LOW);
+                //digitalWrite(ledPins[i], LOW);
                 //digitalWrite(ledPins[1], LOW);
 
 
@@ -221,9 +238,9 @@ void readTouchInputs() {
                 // switch on the new LED output
                 //digitalWrite(ledPins[i], HIGH);
                 // analogWrite(ledPins[i], HIGH);
-                digitalWrite(ledPins[i], HIGH);
-                
-               // digitalWrite(ledPins[1], HIGH);
+                //digitalWrite(ledPins[i], HIGH);
+
+                // digitalWrite(ledPins[1], HIGH);
 
 
                 // don't forget to update lastPlayed - without it we don't
@@ -231,6 +248,8 @@ void readTouchInputs() {
                 lastPlayed = i;
               }
             } else {
+
+              //ELECTRODE_NOW = i;
               // if we're playing nothing, play the requested track
               // and update lastplayed
               MP3player.playTrack(i - firstPin);
@@ -240,8 +259,8 @@ void readTouchInputs() {
               // switch on the new LED output
               //digitalWrite(ledPins[i], HIGH);
               // analogWrite(ledPins[i], HIGH);
-             // digitalWrite(ledPins[i], HIGH);
-             // digitalWrite(ledPins[1], HIGH);
+              // digitalWrite(ledPins[i], HIGH);
+              // digitalWrite(ledPins[1], HIGH);
 
 
               lastPlayed = i;
@@ -263,7 +282,7 @@ void checkTrackFinished() {
   if (!MP3player.isPlaying()) {
     //digitalWrite(ledPins[lastPlayed], LOW);
     digitalWrite(ledPins[lastPlayed], LOW);
-   // digitalWrite(ledPins[1], LOW);
+    // digitalWrite(ledPins[1], LOW);
 
 
   }
