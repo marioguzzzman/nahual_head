@@ -45,7 +45,7 @@ int lastPlayed = 0;
 
 // touch behaviour definitions
 #define firstPin 0
-#define lastPin 11
+#define lastPin 9 // 11
 
 // sd card instantiation
 SdFat sd;
@@ -71,26 +71,29 @@ float lastProx = 0;
 // the electrode to monitor
 //#define ELECTRODE 0
 #define ELECTRODE 0
+#define ELECTRODE 1
 
 //LEDS
-int led1 = 9;
+int led1 = 13;
+int led2 = 11;
 // PWM pins = 13, 11, 10, 9, 6, 5
-//#ifndef LED_BUILTIN
-//#define LED_BUILTIN 13
-//#endif
+#ifndef LED_BUILTIN
+#define LED_BUILTIN 13
+#endif
 
 
 void setup() {
-  pinMode(LED_BUILTIN, OUTPUT);
-  // pinMode(led1, OUTPUT); // initialize the pin
+  //pinMode(LED_BUILTIN, OUTPUT);
+  pinMode(led1, OUTPUT); // initialize the pin
+  pinMode(led2, OUTPUT); // initialize the pin
 
   //This supplies 5 volts to the LED anode,the positive leg
   //(pin,pwm value)
-  analogWrite(LED_BUILTIN, 0);
-  //    analogWrite(led1, 0);
+  //analogWrite(LED_BUILTIN, 0);
+  analogWrite(led1, 0);
+  analogWrite(led2, 0);
 
   //Serial.begin(9600);
-
   Serial.begin(57600);
 
   // while (!Serial) ; {} //uncomment when using the serial monitor
@@ -113,12 +116,17 @@ void setup() {
     Serial.println(" when trying to start MP3 player");
   }
 
-  for (int i = firstPin; i <= lastPin; i++) {
-    pinMode(ledPins[i], OUTPUT);
-    //digitalWrite(ledPins[i], LOW);
-        analogWrite(ledPins[i], LOW);
+  //for (int i = firstPin; i <= lastPin; i++) {
+  //pinMode(ledPins[i], OUTPUT);
+  //digitalWrite(ledPins[i], LOW);
+  // analogWrite(ledPins[i], LOW);
+  //}
 
-  }
+  pinMode(led1, OUTPUT);
+  //digitalWrite(ledPins[i], LOW);
+  digitalWrite(led1, LOW);
+  digitalWrite(led2, LOW);
+
 
   // slow down some of the MPR121 baseline filtering to avoid
   // filtering out slow hand movements
@@ -151,8 +159,10 @@ void loop() {
   uint8_t thisOutput = (uint8_t)map(lastProx, LOW_DIFF, HIGH_DIFF, 0, 255);
 
   // output the mapped value to the LED
-  analogWrite(LED_BUILTIN, thisOutput);
-  // analogWrite(led1, thisOutput);
+  // analogWrite(LED_BUILTIN, thisOutput);
+  analogWrite(led1, thisOutput);
+  analogWrite(led2, thisOutput);
+
 }
 
 
@@ -182,7 +192,11 @@ void readTouchInputs() {
                 Serial.print("stopping track ");
                 Serial.println(i - firstPin);
                 // switch off the relevant LED output
-                digitalWrite(ledPins[lastPlayed], LOW);
+                //                digitalWrite(ledPins[lastPlayed], LOW);
+                digitalWrite(led1, LOW);
+                digitalWrite(led2, LOW);
+
+
               } else {
                 // if we're already playing a different track (or we're in
                 // REPLAY_MODE), stop and play the newly requested one
@@ -191,7 +205,7 @@ void readTouchInputs() {
                 Serial.print("playing track ");
                 Serial.println(i - firstPin);
 
- //***** quizas cambiar esto por
+                //***** quizas cambiar esto por
 
                 // output the mapped value to the LED
                 //analogWrite(LED_BUILTIN, thisOutput);
@@ -200,11 +214,14 @@ void readTouchInputs() {
                 //*******
                 // switch off the relevant LED output
                 //digitalWrite(ledPins[lastPlayed], LOW);
-                analogWrite(ledPins[lastPlayed], LOW);
+                //analogWrite(ledPins[lastPlayed], LOW);
 
                 // switch on the new LED output
-               // digitalWrite(ledPins[i], HIGH);
-                analogWrite(ledPins[i], HIGH);
+                //digitalWrite(ledPins[i], HIGH);
+                // analogWrite(ledPins[i], HIGH);
+                digitalWrite(led1, HIGH);
+                digitalWrite(led2, HIGH);
+
 
                 // don't forget to update lastPlayed - without it we don't
                 // have a history
@@ -215,11 +232,13 @@ void readTouchInputs() {
               // and update lastplayed
               MP3player.playTrack(i - firstPin);
               Serial.print("playing track ");
-              Serial.println(i - firstPin);
+              //Serial.println(i - firstPin);
 
               // switch on the new LED output
               //digitalWrite(ledPins[i], HIGH);
-                            analogWrite(ledPins[i], HIGH);
+              // analogWrite(ledPins[i], HIGH);
+              digitalWrite(led1, HIGH);
+              digitalWrite(led2, HIGH);
 
 
               lastPlayed = i;
@@ -239,6 +258,10 @@ void readTouchInputs() {
 
 void checkTrackFinished() {
   if (!MP3player.isPlaying()) {
-    digitalWrite(ledPins[lastPlayed], LOW);
+    //digitalWrite(ledPins[lastPlayed], LOW);
+    digitalWrite(led1, LOW);
+    digitalWrite(led2, LOW);
+
+
   }
 }
