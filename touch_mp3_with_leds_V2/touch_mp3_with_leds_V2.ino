@@ -53,12 +53,12 @@ SdFat sd;
 // LED pins
 // maps electrode 0 to digital 0, electrode 2 to digital 1, electrode 3 to digital 10 and so on...
 // A0..A5 are the analogue input pins, used as digital outputs in this example
-const int ledPins[12] = {0, 1, 10, 11, 12, 13, A0, A1, A2, A3, A4, A5};
+//const int ledPins[12] = {0, 1, 10, 11, 12, 13, A0, A1, A2, A3, A4, A5};
 // tiene un lag y solo funcionan sin el pwm, es raro eso
 //11 no funca, 13 parpadea,
 //todas las A funcionan
 
-//const int ledPins[6] = {5, 6, 9, 10, 11, 13};
+const int ledPins[3] = {10,11,13};
 //const int ledPins[6] = {5, 6, 9, 10, 11, 13};
 
 
@@ -74,8 +74,8 @@ float lastProx = 0;
 #define ELECTRODE 1
 
 //LEDS
-int led1 = 13;
-int led2 = 11;
+//int ledPins[0] = 10;
+//int ledPins[1] = 11;
 // PWM pins = 13, 11, 10, 9, 6, 5
 #ifndef LED_BUILTIN
 #define LED_BUILTIN 13
@@ -84,14 +84,14 @@ int led2 = 11;
 
 void setup() {
   //pinMode(LED_BUILTIN, OUTPUT);
-  pinMode(led1, OUTPUT); // initialize the pin
-  pinMode(led2, OUTPUT); // initialize the pin
+  pinMode(ledPins[0], OUTPUT); // initialize the pin
+  pinMode(ledPins[1], OUTPUT); // initialize the pin
 
   //This supplies 5 volts to the LED anode,the positive leg
   //(pin,pwm value)
   //analogWrite(LED_BUILTIN, 0);
-  analogWrite(led1, 0);
-  analogWrite(led2, 0);
+  analogWrite(ledPins[0], 0);
+  analogWrite(ledPins[1], 0);
 
   //Serial.begin(9600);
   Serial.begin(57600);
@@ -122,10 +122,9 @@ void setup() {
   // analogWrite(ledPins[i], LOW);
   //}
 
-  pinMode(led1, OUTPUT);
   //digitalWrite(ledPins[i], LOW);
-  digitalWrite(led1, LOW);
-  digitalWrite(led2, LOW);
+  digitalWrite(ledPins[0], LOW);
+  digitalWrite(ledPins[1], LOW);
 
 
   // slow down some of the MPR121 baseline filtering to avoid
@@ -160,8 +159,8 @@ void loop() {
 
   // output the mapped value to the LED
   // analogWrite(LED_BUILTIN, thisOutput);
-  analogWrite(led1, thisOutput);
-  analogWrite(led2, thisOutput);
+  analogWrite(ledPins[0], thisOutput);
+  analogWrite(ledPins[1], thisOutput);
 
 }
 
@@ -193,8 +192,8 @@ void readTouchInputs() {
                 Serial.println(i - firstPin);
                 // switch off the relevant LED output
                 //                digitalWrite(ledPins[lastPlayed], LOW);
-                digitalWrite(led1, LOW);
-                digitalWrite(led2, LOW);
+                digitalWrite(ledPins[i], LOW);
+                //digitalWrite(ledPins[1], LOW);
 
 
               } else {
@@ -209,7 +208,7 @@ void readTouchInputs() {
 
                 // output the mapped value to the LED
                 //analogWrite(LED_BUILTIN, thisOutput);
-                // analogWrite(led1, thisOutput);
+                // analogWrite(ledPins[0], thisOutput);
 
                 //*******
                 // switch off the relevant LED output
@@ -219,8 +218,8 @@ void readTouchInputs() {
                 // switch on the new LED output
                 //digitalWrite(ledPins[i], HIGH);
                 // analogWrite(ledPins[i], HIGH);
-                digitalWrite(led1, HIGH);
-                digitalWrite(led2, HIGH);
+                digitalWrite(ledPins[i], HIGH);
+               // digitalWrite(ledPins[1], HIGH);
 
 
                 // don't forget to update lastPlayed - without it we don't
@@ -237,8 +236,8 @@ void readTouchInputs() {
               // switch on the new LED output
               //digitalWrite(ledPins[i], HIGH);
               // analogWrite(ledPins[i], HIGH);
-              digitalWrite(led1, HIGH);
-              digitalWrite(led2, HIGH);
+              digitalWrite(ledPins[i], HIGH);
+             // digitalWrite(ledPins[1], HIGH);
 
 
               lastPlayed = i;
@@ -259,8 +258,8 @@ void readTouchInputs() {
 void checkTrackFinished() {
   if (!MP3player.isPlaying()) {
     //digitalWrite(ledPins[lastPlayed], LOW);
-    digitalWrite(led1, LOW);
-    digitalWrite(led2, LOW);
+    digitalWrite(ledPins[lastPlayed], LOW);
+   // digitalWrite(ledPins[1], LOW);
 
 
   }
