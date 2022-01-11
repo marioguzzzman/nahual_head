@@ -155,6 +155,7 @@ void loop() {
 
   // map the LOW_DIFF..HIGH_DIFF range to 0..255 (8-bit resolution for analogWrite)
   uint8_t thisOutput = (uint8_t)map(lastProx, LOW_DIFF, HIGH_DIFF, 0, 255);
+  uint8_t thisVolume = (uint8_t)map(lastProx,LOW_DIFF,HIGH_DIFF,0,254);
 
   // output the mapped value to the LED
   // analogWrite(LED_BUILTIN, thisOutput);
@@ -171,6 +172,10 @@ void loop() {
       analogWrite(ledPins[i], 0);
     }
   }
+
+    MP3player.setVolume(thisVolume, thisVolume);
+
+  
 
 }
 
