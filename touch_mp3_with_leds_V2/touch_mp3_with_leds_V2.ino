@@ -135,7 +135,7 @@ void setup() {
 
 void loop() {
   readTouchInputs();
-  checkTrackFinished();
+//  checkTrackFinished();
 
   // update all of the data from the MPR121
   MPR121.updateAll();
@@ -272,9 +272,9 @@ void readTouchInputs() {
 void checkTrackFinished() {
   if (!MP3player.isPlaying()) {
     //digitalWrite(ledPins[lastPlayed], LOW);
-    digitalWrite(ledPins[lastPlayed], LOW);
+    //digitalWrite(ledPins[lastPlayed], LOW);
     // digitalWrite(ledPins[1], LOW);
-
+        analogWrite(ledPins[lastPlayed], 0);
 
   }
 }
