@@ -135,7 +135,7 @@ void setup() {
 
 void loop() {
   readTouchInputs();
-//  checkTrackFinished();
+  //  checkTrackFinished();
 
   // update all of the data from the MPR121
   MPR121.updateAll();
@@ -215,24 +215,9 @@ void readTouchInputs() {
                 Serial.print("playing track ");
                 Serial.println(i - firstPin);
 
-                //***** quizas cambiar esto por
-
-                // output the mapped value to the LED
-                //analogWrite(LED_BUILTIN, thisOutput);
-                // analogWrite(ledPins[0], thisOutput);
-
-                //*******
                 // switch off the relevant LED output
                 //digitalWrite(ledPins[lastPlayed], LOW);
                 //analogWrite(ledPins[lastPlayed], LOW);
-
-                // switch on the new LED output
-                //digitalWrite(ledPins[i], HIGH);
-                // analogWrite(ledPins[i], HIGH);
-                //digitalWrite(ledPins[i], HIGH);
-
-                // digitalWrite(ledPins[1], HIGH);
-
 
                 // don't forget to update lastPlayed - without it we don't
                 // have a history
@@ -249,11 +234,7 @@ void readTouchInputs() {
 
               // switch on the new LED output
               //digitalWrite(ledPins[i], HIGH);
-              // analogWrite(ledPins[i], HIGH);
-              // digitalWrite(ledPins[i], HIGH);
-              // digitalWrite(ledPins[1], HIGH);
-
-
+             
               lastPlayed = i;
             }
           }
@@ -272,9 +253,8 @@ void readTouchInputs() {
 void checkTrackFinished() {
   if (!MP3player.isPlaying()) {
     //digitalWrite(ledPins[lastPlayed], LOW);
-    //digitalWrite(ledPins[lastPlayed], LOW);
     // digitalWrite(ledPins[1], LOW);
-        analogWrite(ledPins[lastPlayed], 0);
+    analogWrite(ledPins[lastPlayed], 0);
 
   }
 }
