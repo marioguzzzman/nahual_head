@@ -82,7 +82,7 @@ int ELECTRODE_NOW = 0;
 
 
 void setup() {
- 
+
   //Serial.begin(9600);
   Serial.begin(57600);
 
@@ -112,7 +112,7 @@ void setup() {
   // analogWrite(ledPins[i], LOW);
   //}
 
- //pinMode(LED_BUILTIN, OUTPUT);
+  //pinMode(LED_BUILTIN, OUTPUT);
   pinMode(ledPins[0], OUTPUT); // initialize the pin
   pinMode(ledPins[1], OUTPUT); // initialize the pin
   pinMode(ledPins[2], OUTPUT); // initialize the pin
@@ -162,15 +162,15 @@ void loop() {
   //analogWrite(ledPins[1], 0);
   // analogWrite(ledPins[2], 0);
 
-  analogWrite(ELECTRODE_NOW, thisOutput);
+  //analogWrite(ELECTRODE_NOW, thisOutput);
   //analogWrite(ledPins[1], thisOutput);
-  //for (int i = 0; i < 3; i++) {
-  //  if (i == ELECTRODE_NOW) {
-  //  analogWrite(ledPins[ELECTRODE_NOW], thisOutput);
-  // } else {
-  //    analogWrite(ledPins[i], 0);
-  //   }
-  //  }
+  for (int i = 0; i < 3; i++) {
+    if (i == ELECTRODE_NOW) {
+      analogWrite(ledPins[ELECTRODE_NOW], thisOutput);
+    } else {
+      analogWrite(ledPins[i], 0);
+    }
+  }
 
 }
 
