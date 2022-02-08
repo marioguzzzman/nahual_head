@@ -1,10 +1,24 @@
+
+/* -----BIENAL LATINOAMERICANA DE INTELIGENCIA ARTIFICIAL---
+  Mario Alberto Guzman Cerdio
+  mariouzzzman@gmail.com  */
+
 //si hay alguien, prende motores,
 //si no hay nadie apaga motores.
 
+boolean hay_alguien = false;
+boolean ver_distancia = true;
+
+//-------------------------------------MOTORES
 #include <AFMotor.h>
 //Defining the DC motor you are using.
 AF_DCMotor motor(1);
 
+//-------------------------------------POTENTIOMETER
+int motorSpeedPot = A5;
+
+
+//-------------------------------------ULTRASOUND
 //#define echoPin A0 // attach pin D2 Arduino to pin Echo of HC-SR04
 //#define trigPin A1 //attach pin D3 Arduino to pin Trig of HC-SR04
 
@@ -25,19 +39,22 @@ void setup()
 
   //---SENSOR DISTANCIA --
 
-  //  pinMode (trigPin, OUTPUT);
-  //  pinMode (echoPin, INPUT);
-  //
-  //  Serial.println("Ultrasonic Sensor HC-SR04 Test"); // print some text in Serial Monitor
-  //  Serial.println("with Arduino UNO R3");
+    pinMode (trigPin, OUTPUT);
+    pinMode (echoPin, INPUT);
+  
+    Serial.println("Ultrasonic Sensor HC-SR04 Test"); // print some text in Serial Monitor
+    Serial.println("with Arduino UNO R3");
 }
 
 void loop()
 {
 
-  //Read potentiometer
-  // read the input on analog pin 0:
-  int motorSpeedPot = analogRead(A5);
+if (hay_alguien == false) {
+
+//-------------------------------------POTENTIOMETER
+    //Read potentiometer
+  // read the input on analog pin 5:
+  motorSpeedPot = analogRead(A5);
 
   /* Map an analog value to 8 bits (0 to 255) */
   motorSpeedPot = map(motorSpeedPot, 0, 1023, 0, 255);
@@ -45,6 +62,17 @@ void loop()
   // print out the value you read:
   Serial.println(motorSpeedPot);
   delay(1);        // delay in between reads for stability
+
+//-------------------------------------MOTOR
+
+   //Set controlled speed of the motor & stop
+  motor.setSpeed(motorSpeedPot);
+
+  // Turn on motor
+  motor.run(FORWARD);
+
+    }
+
 
 
   //  // Clears the trigPin condition
@@ -66,11 +94,6 @@ void loop()
   uint8_t i;
 
 
-  //Set controlled speed of the motor & stop
-  motor.setSpeed(motorSpeedPot);
-
-  // Turn on motor
-  motor.run(FORWARD);
 }
 
 //void sensordistancia () {
