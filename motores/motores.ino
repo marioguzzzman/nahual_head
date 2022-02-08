@@ -37,7 +37,7 @@ void loop()
 
   //Read potentiometer
   // read the input on analog pin 0:
-  int motorSpeedPot = analogRead(A0);
+  int motorSpeedPot = analogRead(A5);
 
 /* Map an analog value to 8 bits (0 to 255) */
   motorSpeedPot = map(motorSpeedPot, 0, 1023, 0, 255);
