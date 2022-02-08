@@ -2,6 +2,7 @@
 //si no hay nadie apaga motores.
 
 #include <AFMotor.h>
+//Defining the DC motor you are using.
 AF_DCMotor motor(1);
 
 //#define echoPin A0 // attach pin D2 Arduino to pin Echo of HC-SR04
@@ -18,10 +19,9 @@ void setup()
 {
   Serial.begin(9600); // // Serial Communication is starting with 9600 of baudrate speed
 
-
   //Set initial speed of the motor & stop
-  //motor.setSpeed(255);
-  //motor.run(RELEASE);
+  motor.setSpeed(0);
+  motor.run(RELEASE);
 
   //---SENSOR DISTANCIA --
 
@@ -39,7 +39,7 @@ void loop()
   // read the input on analog pin 0:
   int motorSpeedPot = analogRead(A5);
 
-/* Map an analog value to 8 bits (0 to 255) */
+  /* Map an analog value to 8 bits (0 to 255) */
   motorSpeedPot = map(motorSpeedPot, 0, 1023, 0, 255);
 
   // print out the value you read:
@@ -64,6 +64,10 @@ void loop()
   //  Serial.println(" cm");
 
   uint8_t i;
+
+
+  //Set controlled speed of the motor & stop
+  motor.setSpeed(motorSpeedPot);
 
   // Turn on motor
   motor.run(FORWARD);
