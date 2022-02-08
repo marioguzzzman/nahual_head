@@ -1,4 +1,4 @@
- //si hay alguien, prende motores,
+//si hay alguien, prende motores,
 //si no hay nadie apaga motores.
 
 #include <AFMotor.h>
@@ -18,46 +18,50 @@ void setup()
 {
   Serial.begin(9600); // // Serial Communication is starting with 9600 of baudrate speed
 
-  
+
   //Set initial speed of the motor & stop
   //motor.setSpeed(255);
   //motor.run(RELEASE);
 
   //---SENSOR DISTANCIA --
 
-//  pinMode (trigPin, OUTPUT);
-//  pinMode (echoPin, INPUT);
-//  
-//  Serial.println("Ultrasonic Sensor HC-SR04 Test"); // print some text in Serial Monitor
-//  Serial.println("with Arduino UNO R3");
+  //  pinMode (trigPin, OUTPUT);
+  //  pinMode (echoPin, INPUT);
+  //
+  //  Serial.println("Ultrasonic Sensor HC-SR04 Test"); // print some text in Serial Monitor
+  //  Serial.println("with Arduino UNO R3");
 }
 
 void loop()
 {
 
-//Read sensor
- // read the input on analog pin 0:
-  int sensorValue = analogRead(A0);
+  //Read potentiometer
+  // read the input on analog pin 0:
+  int motorSpeedPot = analogRead(A0);
+
+/* Map an analog value to 8 bits (0 to 255) */
+  motorSpeedPot = map(motorSpeedPot, 0, 1023, 0, 255);
+
   // print out the value you read:
-  Serial.println(sensorValue);
+  Serial.println(motorSpeedPot);
   delay(1);        // delay in between reads for stability
 
-  
-//  // Clears the trigPin condition
-//  analogWrite(trigPin, LOW);
-//  delayMicroseconds(2);
-//  // Sets the trigPin HIGH (ACTIVE) for 10 microseconds
-//  analogWrite(trigPin, HIGH);
-//  delayMicroseconds(10);
-//  analogWrite(trigPin, LOW);
-//  // Reads the echoPin, returns the sound wave travel time in microseconds
-//  duration = pulseIn(echoPin, HIGH);
-//  // Calculating the distance
-//  distance = duration * 0.034 / 2; // Speed of sound wave divided by 2 (go and back)
-//  // Displays the distance on the Serial Monitor
-//  Serial.print("Distance: ");
-//  Serial.print(distance);
-//  Serial.println(" cm");
+
+  //  // Clears the trigPin condition
+  //  analogWrite(trigPin, LOW);
+  //  delayMicroseconds(2);
+  //  // Sets the trigPin HIGH (ACTIVE) for 10 microseconds
+  //  analogWrite(trigPin, HIGH);
+  //  delayMicroseconds(10);
+  //  analogWrite(trigPin, LOW);
+  //  // Reads the echoPin, returns the sound wave travel time in microseconds
+  //  duration = pulseIn(echoPin, HIGH);
+  //  // Calculating the distance
+  //  distance = duration * 0.034 / 2; // Speed of sound wave divided by 2 (go and back)
+  //  // Displays the distance on the Serial Monitor
+  //  Serial.print("Distance: ");
+  //  Serial.print(distance);
+  //  Serial.println(" cm");
 
   uint8_t i;
 
