@@ -91,8 +91,6 @@ if (hay_alguien == false) {
   //  Serial.print(distance);
   //  Serial.println(" cm");
 
-  uint8_t i;
-
 
 }
 
