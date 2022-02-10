@@ -1,10 +1,10 @@
 
 /*******************************************************************************
 
-  
- -----BIENAL LATINOAMERICANA DE INTELIGENCIA ARTIFICIAL---
+
+  -----BIENAL LATINOAMERICANA DE INTELIGENCIA ARTIFICIAL---
   Mario Alberto Guzman Cerdio
-  mariouzzzman@gmail.com  
+  mariouzzzman@gmail.com
 
   Touch_MP3.ino - touch triggered MP3 playback
 
@@ -15,7 +15,7 @@
   E1, TRACK001.mp3 will play, and so on.
 
   based on: https://github.com/BareConductive/touch_mp3_with_leds
-
+https://github.com/BareConductive/prox-volume/blob/public/prox_volume/prox_volume.ino
 
 *******************************************************************************/
 
@@ -38,6 +38,8 @@
 SFEMP3Shield MP3player;
 byte result;
 int lastPlayed = 0;
+uint8_t volume = 0;
+
 
 // mp3 behaviour defines
 #define REPLAY_MODE FALSE  // By default, touching an electrode repeatedly will 
@@ -66,7 +68,7 @@ const int ledPins[3] = {10, 11, 13};
 // mapping and filter definitions
 #define LOW_DIFF 0
 #define HIGH_DIFF 50
-#define filterWeight 0.3f // 0.0f to 1.0f - higher value = more smoothing
+#define filterWeight 0.5f // 0.0f to 1.0f - higher value = more smoothing
 float lastProx = 0;
 
 // the electrode to monitor
@@ -91,7 +93,7 @@ void setup() {
   Serial.begin(57600);
 
   // while (!Serial) ; {} //uncomment when using the serial monitor
-  Serial.println("Bare Conductive Touch MP3 player");
+  //Serial.println("Bare Conductive Touch MP3 player");
 
   if (!sd.begin(SD_SEL, SPI_HALF_SPEED)) sd.initErrorHalt();
 
@@ -102,7 +104,8 @@ void setup() {
   MPR121.setReleaseThreshold(20);
 
   result = MP3player.begin();
-  MP3player.setVolume(10, 10);
+  MP3player.setVolume(volume,volume);
+
 
   if (result != 0) {
     Serial.print("Error code: ");
@@ -159,7 +162,7 @@ void loop() {
 
   // map the LOW_DIFF..HIGH_DIFF range to 0..255 (8-bit resolution for analogWrite)
   uint8_t thisOutput = (uint8_t)map(lastProx, LOW_DIFF, HIGH_DIFF, 0, 255);
-  uint8_t thisVolume = (uint8_t)map(lastProx,LOW_DIFF,HIGH_DIFF,0,254);
+  uint8_t thisVolume = (uint8_t)map(lastProx, LOW_DIFF, HIGH_DIFF, 0, 254);
 
   // output the mapped value to the LED
   // analogWrite(LED_BUILTIN, thisOutput);
@@ -176,11 +179,8 @@ void loop() {
       analogWrite(ledPins[i], 0);
     }
   }
-
-    MP3player.setVolume(thisVolume, thisVolume);
-
-  
-
+// if((uint8_t)lastProx!=prox){ // only update volume if the value has changed
+  MP3player.setVolume(thisVolume, thisVolume);
 }
 
 
@@ -209,12 +209,7 @@ void readTouchInputs() {
                 MP3player.stopTrack();
                 Serial.print("stopping track ");
                 Serial.println(i - firstPin);
-                // switch off the relevant LED output
-                //                digitalWrite(ledPins[lastPlayed], LOW);
-                //digitalWrite(ledPins[i], LOW);
-                //digitalWrite(ledPins[1], LOW);
-
-
+               
               } else {
                 ELECTRODE_NOW = i;
                 // if we're already playing a different track (or we're in
@@ -241,9 +236,6 @@ void readTouchInputs() {
               Serial.print("playing track ");
               //Serial.println(i - firstPin);
 
-              // switch on the new LED output
-              //digitalWrite(ledPins[i], HIGH);
-             
               lastPlayed = i;
             }
           }
