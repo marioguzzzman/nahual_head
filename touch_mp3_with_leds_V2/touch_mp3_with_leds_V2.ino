@@ -1,8 +1,10 @@
 
 /*******************************************************************************
 
-  Bare Conductive Touch MP3 player
-  ------------------------------
+  
+ -----BIENAL LATINOAMERICANA DE INTELIGENCIA ARTIFICIAL---
+  Mario Alberto Guzman Cerdio
+  mariouzzzman@gmail.com  
 
   Touch_MP3.ino - touch triggered MP3 playback
 
@@ -11,6 +13,8 @@
 
   When you touch electrode E0, TRACK000.mp3 will play. When you touch electrode
   E1, TRACK001.mp3 will play, and so on.
+
+  based on: https://github.com/BareConductive/touch_mp3_with_leds
 
 
 *******************************************************************************/
