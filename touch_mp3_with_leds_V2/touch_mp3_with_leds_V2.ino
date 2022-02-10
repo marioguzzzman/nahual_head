@@ -102,17 +102,77 @@ void setup() {
   //Serial.begin(57600); This was before
   Serial.begin(BAUD_RATE);
 
+  //pinMode(LED_BUILTIN, OUTPUT);
+  pinMode(ledPins[0], OUTPUT); // initialize the pin
+  pinMode(ledPins[1], OUTPUT); // initialize the pin
+  pinMode(ledPins[2], OUTPUT); // initialize the pin
+
+  if (WAIT_FOR_SERIAL) {
+    while (!Serial);
+  }
+
+  // initialise the Arduino pseudo-random number generator with
+  // a bit of noise for extra randomness - this is good general practice
+  randomSeed(analogRead(0));
 
   // while (!Serial) ; {} //uncomment when using the serial monitor
-  Serial.println("Bare Conductive Touch MP3 player");
+  // Serial.println("Bare Conductive Touch MP3 player");
 
   if (!sd.begin(SD_SEL, SPI_HALF_SPEED)) sd.initErrorHalt();
 
-  if (!MPR121.begin(MPR121_ADDR)) Serial.println("error setting up MPR121");
+  //if (!MPR121.begin(MPR121_ADDR)) Serial.println("error setting up MPR121");
+  //MPR121.setInterruptPin(MPR121_INT);
+
+  if (!MPR121.begin(MPR121_ADDR)) {
+    Serial.println("error setting up MPR121");
+    switch (MPR121.getError()) {
+      case NO_ERROR:
+        Serial.println("no error");
+        break;
+      case ADDRESS_UNKNOWN:
+        Serial.println("incorrect address");
+        break;
+      case READBACK_FAIL:
+        Serial.println("readback failure");
+        break;
+      case OVERCURRENT_FLAG:
+        Serial.println("overcurrent on REXT pin");
+        break;
+      case OUT_OF_RANGE:
+        Serial.println("electrode out of range");
+        break;
+      case NOT_INITED:
+        Serial.println("not initialised");
+        break;
+      default:
+        Serial.println("unknown error");
+        break;
+    }
+    while (1);
+  }
+
   MPR121.setInterruptPin(MPR121_INT);
 
-  MPR121.setTouchThreshold(40);
-  MPR121.setReleaseThreshold(20);
+  if (MPR121_DATASTREAM_ENABLE) {
+    MPR121.restoreSavedThresholds();
+    MPR121_Datastream.begin(&Serial);
+  } else {
+    MPR121.setTouchThreshold(40);
+    MPR121.setReleaseThreshold(20);
+  }
+
+  MPR121.setFFI(FFI_10);
+  MPR121.setSFI(SFI_10);
+  MPR121.setGlobalCDT(CDT_4US);  // reasonable for larger capacitances
+
+  //digitalWrite(LED_BUILTIN, HIGH);  // switch on user LED while auto calibrating electrodes
+  //delay(1000);
+  MPR121.autoSetElectrodes();  // autoset all electrode settings
+  //digitalWrite(LED_BUILTIN, LOW);
+
+
+  //  MPR121.setTouchThreshold(40);
+  //MPR121.setReleaseThreshold(20);
 
   result = MP3player.begin();
   MP3player.setVolume(10, 10);
@@ -122,17 +182,6 @@ void setup() {
     Serial.print(result);
     Serial.println(" when trying to start MP3 player");
   }
-
-  //for (int i = firstPin; i <= lastPin; i++) {
-  //pinMode(ledPins[i], OUTPUT);
-  //digitalWrite(ledPins[i], LOW);
-  // analogWrite(ledPins[i], LOW);
-  //}
-
-  //pinMode(LED_BUILTIN, OUTPUT);
-  pinMode(ledPins[0], OUTPUT); // initialize the pin
-  pinMode(ledPins[1], OUTPUT); // initialize the pin
-  pinMode(ledPins[2], OUTPUT); // initialize the pin
 
 
   //This supplies 5 volts to the LED anode,the positive leg
