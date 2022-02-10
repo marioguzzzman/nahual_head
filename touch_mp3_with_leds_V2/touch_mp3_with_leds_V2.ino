@@ -18,28 +18,12 @@
 // compiler error handling
 #include "Compiler_Errors.h"
 
-//------------------TOUCH
 // touch includes
 #include <MPR121.h>
 #include <Wire.h>
-#include <MPR121_Datastream.h>
-
-// touch constants
-const uint32_t BAUD_RATE = 115200;
 #define MPR121_ADDR 0x5C
 #define MPR121_INT 4
 
-// touch behaviour definitions
-#define firstPin 0
-#define lastPin 11 // 11
-
-// serial monitor behaviour constants
-const bool WAIT_FOR_SERIAL = false;
-
-// MPR121 datastream behaviour constants
-const bool MPR121_DATASTREAM_ENABLE = false;
-
-//------------------MP3
 // mp3 includes
 #include <SPI.h>
 #include <SdFat.h>
@@ -59,12 +43,13 @@ int lastPlayed = 0;
 // electrode will stop the track if it is already
 // playing, or play it from the start if it is not.
 
-//------------------SD
+// touch behaviour definitions
+#define firstPin 0
+#define lastPin 11 // 11
+
 // sd card instantiation
 SdFat sd;
-SdFile file;
 
-//------------------LED
 // LED pins
 // maps electrode 0 to digital 0, electrode 2 to digital 1, electrode 3 to digital 10 and so on...
 // A0..A5 are the analogue input pins, used as digital outputs in this example
@@ -99,80 +84,18 @@ int ELECTRODE_NOW = 0;
 void setup() {
 
   //Serial.begin(9600);
-  //Serial.begin(57600); This was before
-  Serial.begin(BAUD_RATE);
-
-  //pinMode(LED_BUILTIN, OUTPUT);
-  pinMode(ledPins[0], OUTPUT); // initialize the pin
-  pinMode(ledPins[1], OUTPUT); // initialize the pin
-  pinMode(ledPins[2], OUTPUT); // initialize the pin
-
-  if (WAIT_FOR_SERIAL) {
-    while (!Serial);
-  }
-
-  // initialise the Arduino pseudo-random number generator with
-  // a bit of noise for extra randomness - this is good general practice
-  randomSeed(analogRead(0));
+  Serial.begin(57600);
 
   // while (!Serial) ; {} //uncomment when using the serial monitor
-  // Serial.println("Bare Conductive Touch MP3 player");
+  Serial.println("Bare Conductive Touch MP3 player");
 
   if (!sd.begin(SD_SEL, SPI_HALF_SPEED)) sd.initErrorHalt();
 
-  //if (!MPR121.begin(MPR121_ADDR)) Serial.println("error setting up MPR121");
-  //MPR121.setInterruptPin(MPR121_INT);
-
-  if (!MPR121.begin(MPR121_ADDR)) {
-    Serial.println("error setting up MPR121");
-    switch (MPR121.getError()) {
-      case NO_ERROR:
-        Serial.println("no error");
-        break;
-      case ADDRESS_UNKNOWN:
-        Serial.println("incorrect address");
-        break;
-      case READBACK_FAIL:
-        Serial.println("readback failure");
-        break;
-      case OVERCURRENT_FLAG:
-        Serial.println("overcurrent on REXT pin");
-        break;
-      case OUT_OF_RANGE:
-        Serial.println("electrode out of range");
-        break;
-      case NOT_INITED:
-        Serial.println("not initialised");
-        break;
-      default:
-        Serial.println("unknown error");
-        break;
-    }
-    while (1);
-  }
-
+  if (!MPR121.begin(MPR121_ADDR)) Serial.println("error setting up MPR121");
   MPR121.setInterruptPin(MPR121_INT);
 
-  if (MPR121_DATASTREAM_ENABLE) {
-    MPR121.restoreSavedThresholds();
-    MPR121_Datastream.begin(&Serial);
-  } else {
-    MPR121.setTouchThreshold(40);
-    MPR121.setReleaseThreshold(20);
-  }
-
-  MPR121.setFFI(FFI_10);
-  MPR121.setSFI(SFI_10);
-  MPR121.setGlobalCDT(CDT_4US);  // reasonable for larger capacitances
-
-  //digitalWrite(LED_BUILTIN, HIGH);  // switch on user LED while auto calibrating electrodes
-  //delay(1000);
-  MPR121.autoSetElectrodes();  // autoset all electrode settings
-  //digitalWrite(LED_BUILTIN, LOW);
-
-
-  //  MPR121.setTouchThreshold(40);
-  //MPR121.setReleaseThreshold(20);
+  MPR121.setTouchThreshold(40);
+  MPR121.setReleaseThreshold(20);
 
   result = MP3player.begin();
   MP3player.setVolume(10, 10);
@@ -182,6 +105,17 @@ void setup() {
     Serial.print(result);
     Serial.println(" when trying to start MP3 player");
   }
+
+  //for (int i = firstPin; i <= lastPin; i++) {
+  //pinMode(ledPins[i], OUTPUT);
+  //digitalWrite(ledPins[i], LOW);
+  // analogWrite(ledPins[i], LOW);
+  //}
+
+  //pinMode(LED_BUILTIN, OUTPUT);
+  pinMode(ledPins[0], OUTPUT); // initialize the pin
+  pinMode(ledPins[1], OUTPUT); // initialize the pin
+  pinMode(ledPins[2], OUTPUT); // initialize the pin
 
 
   //This supplies 5 volts to the LED anode,the positive leg
@@ -221,7 +155,7 @@ void loop() {
 
   // map the LOW_DIFF..HIGH_DIFF range to 0..255 (8-bit resolution for analogWrite)
   uint8_t thisOutput = (uint8_t)map(lastProx, LOW_DIFF, HIGH_DIFF, 0, 255);
-  uint8_t thisVolume = (uint8_t)map(lastProx, LOW_DIFF, HIGH_DIFF, 0, 254);
+  uint8_t thisVolume = (uint8_t)map(lastProx,LOW_DIFF,HIGH_DIFF,0,254);
 
   // output the mapped value to the LED
   // analogWrite(LED_BUILTIN, thisOutput);
@@ -239,9 +173,9 @@ void loop() {
     }
   }
 
-  MP3player.setVolume(thisVolume, thisVolume);
+    MP3player.setVolume(thisVolume, thisVolume);
 
-
+  
 
 }
 
@@ -305,7 +239,7 @@ void readTouchInputs() {
 
               // switch on the new LED output
               //digitalWrite(ledPins[i], HIGH);
-
+             
               lastPlayed = i;
             }
           }
