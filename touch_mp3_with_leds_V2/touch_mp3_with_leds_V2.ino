@@ -18,12 +18,28 @@
 // compiler error handling
 #include "Compiler_Errors.h"
 
+//------------------TOUCH
 // touch includes
 #include <MPR121.h>
 #include <Wire.h>
+#include <MPR121_Datastream.h>
+
+// touch constants
+const uint32_t BAUD_RATE = 115200;
 #define MPR121_ADDR 0x5C
 #define MPR121_INT 4
 
+// touch behaviour definitions
+#define firstPin 0
+#define lastPin 11 // 11
+
+// serial monitor behaviour constants
+const bool WAIT_FOR_SERIAL = false;
+
+// MPR121 datastream behaviour constants
+const bool MPR121_DATASTREAM_ENABLE = false;
+
+//------------------MP3
 // mp3 includes
 #include <SPI.h>
 #include <SdFat.h>
@@ -43,13 +59,12 @@ int lastPlayed = 0;
 // electrode will stop the track if it is already
 // playing, or play it from the start if it is not.
 
-// touch behaviour definitions
-#define firstPin 0
-#define lastPin 11 // 11
-
+//------------------SD
 // sd card instantiation
 SdFat sd;
+SdFile file;
 
+//------------------LED
 // LED pins
 // maps electrode 0 to digital 0, electrode 2 to digital 1, electrode 3 to digital 10 and so on...
 // A0..A5 are the analogue input pins, used as digital outputs in this example
@@ -84,7 +99,9 @@ int ELECTRODE_NOW = 0;
 void setup() {
 
   //Serial.begin(9600);
-  Serial.begin(57600);
+  //Serial.begin(57600); This was before
+  Serial.begin(BAUD_RATE);
+
 
   // while (!Serial) ; {} //uncomment when using the serial monitor
   Serial.println("Bare Conductive Touch MP3 player");
@@ -155,7 +172,7 @@ void loop() {
 
   // map the LOW_DIFF..HIGH_DIFF range to 0..255 (8-bit resolution for analogWrite)
   uint8_t thisOutput = (uint8_t)map(lastProx, LOW_DIFF, HIGH_DIFF, 0, 255);
-  uint8_t thisVolume = (uint8_t)map(lastProx,LOW_DIFF,HIGH_DIFF,0,254);
+  uint8_t thisVolume = (uint8_t)map(lastProx, LOW_DIFF, HIGH_DIFF, 0, 254);
 
   // output the mapped value to the LED
   // analogWrite(LED_BUILTIN, thisOutput);
@@ -173,9 +190,9 @@ void loop() {
     }
   }
 
-    MP3player.setVolume(thisVolume, thisVolume);
+  MP3player.setVolume(thisVolume, thisVolume);
 
-  
+
 
 }
 
@@ -239,7 +256,7 @@ void readTouchInputs() {
 
               // switch on the new LED output
               //digitalWrite(ledPins[i], HIGH);
-             
+
               lastPlayed = i;
             }
           }
