@@ -11,8 +11,13 @@ boolean ver_distancia = true;
 
 //-------------------------------------MOTORES
 #include <AFMotor.h>
+#include <Servo.h>
+
 //Defining the DC motor you are using.
 AF_DCMotor motor(1);
+
+Servo myservo;
+
 
 //-------------------------------------POTENTIOMETER
 int motorSpeedPot = A5;
@@ -37,73 +42,72 @@ void setup()
   motor.setSpeed(0);
   motor.run(RELEASE);
 
+  myservo.attach(9);   //Determine the pin connecting to Servo.(pin 9 for sevo #1 and pin 10 for servo #2)
+
+
+
+
   //---SENSOR DISTANCIA --
 
-    pinMode (trigPin, OUTPUT);
-    pinMode (echoPin, INPUT);
-  
-    Serial.println("Ultrasonic Sensor HC-SR04 Test"); // print some text in Serial Monitor
-    Serial.println("with Arduino UNO R3");
+  pinMode (trigPin, OUTPUT);
+  pinMode (echoPin, INPUT);
+
+  Serial.println("Ultrasonic Sensor HC-SR04 Test"); // print some text in Serial Monitor
+  Serial.println("with Arduino UNO R3");
 }
 
 void loop()
 {
 
-if (hay_alguien == false) {
+  //if (hay_alguien == false) {
 
-//-------------------------------------POTENTIOMETER
+    //-------------------------------------POTENTIOMETER
     //Read potentiometer
-  // read the input on analog pin 5:
-  motorSpeedPot = analogRead(A5);
+    // read the input on analog pin 5:
+    motorSpeedPot = analogRead(A5);
 
-  /* Map an analog value to 8 bits (0 to 255) */
-  motorSpeedPot = map(motorSpeedPot, 0, 1023, 0, 255);
-
-  // print out the value you read:
-  Serial.println(motorSpeedPot);
-  delay(1);        // delay in between reads for stability
-
-//-------------------------------------MOTOR
-
-   //Set controlled speed of the motor & stop
-  motor.setSpeed(motorSpeedPot);
-
-  // Turn on motor
-  motor.run(FORWARD);
-
-    }
+    /* Map an analog value to 8 bits (0 to 255) */
+    //motorSpeedPot = map(motorSpeedPot, 0, 1023, 0, 255);
+    motorSpeedPot = map(motorSpeedPot, 0, 1023, 0, 360);
 
 
+    // print out the value you read:
+    Serial.println(motorSpeedPot);
+    delay(1);        // delay in between reads for stability
 
-  //  // Clears the trigPin condition
-  //  analogWrite(trigPin, LOW);
-  //  delayMicroseconds(2);
-  //  // Sets the trigPin HIGH (ACTIVE) for 10 microseconds
-  //  analogWrite(trigPin, HIGH);
-  //  delayMicroseconds(10);
-  //  analogWrite(trigPin, LOW);
-  //  // Reads the echoPin, returns the sound wave travel time in microseconds
-  //  duration = pulseIn(echoPin, HIGH);
-  //  // Calculating the distance
-  //  distance = duration * 0.034 / 2; // Speed of sound wave divided by 2 (go and back)
-  //  // Displays the distance on the Serial Monitor
-  //  Serial.print("Distance: ");
-  //  Serial.print(distance);
-  //  Serial.println(" cm");
+    //-------------------------------------MOTOR
 
+    //Set controlled speed of the motor & stop
+    motor.setSpeed(motorSpeedPot);
+
+    // Turn on motor
+    motor.run(FORWARD);
+
+    //Servo
+    //Determine the amount of motor rotation. Between 0 to 360 or 0 to 180 according to motor type.
+
+    myservo.write(motorSpeedPot);
+    delay(15);
+
+ // }
+
+ sensordistancia();
 
 }
 
-//void sensordistancia () {
-//  // boolean vuelve = false;
-//  long duration;
-//  digitalWrite(trigPin, LOW);  // Added this line
-//  delayMicroseconds(2); // Added this line
-//  digitalWrite(trigPin, HIGH);
-//  //  delayMicroseconds(1000); - Removed this line
-//  delayMicroseconds(10); // Added this line
-//  digitalWrite(trigPin, LOW);
-//  duration = pulseIn(echoPin, HIGH);
-//  // distance = (duration/2) / 29.1;
-//  distance = duration / 58.2;
-//}
+void sensordistancia () {
+  // boolean vuelve = false;
+  long duration;
+  digitalWrite(trigPin, LOW);  // Added this line
+  delayMicroseconds(2); // Added this line
+  digitalWrite(trigPin, HIGH);
+  //  delayMicroseconds(1000); - Removed this line
+  delayMicroseconds(10); // Added this line
+  digitalWrite(trigPin, LOW);
+  duration = pulseIn(echoPin, HIGH);
+  // distance = (duration/2) / 29.1;
+  distance = duration / 58.2;
+  Serial.print("Distance: ");
+  Serial.print(distance);
+  Serial.println(" cm");
+}
