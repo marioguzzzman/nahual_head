@@ -8,6 +8,8 @@
 
 boolean hay_alguien = false;
 boolean ver_distancia = true;
+boolean manual = false;
+
 
 //-------------------------------------MOTORES
 #include <AFMotor.h>
@@ -17,6 +19,9 @@ boolean ver_distancia = true;
 AF_DCMotor motor(1);
 
 Servo myservo;
+
+int distanceXspeed;
+int minSpeed = 20;
 
 
 //-------------------------------------POTENTIOMETER
@@ -59,7 +64,9 @@ void setup()
 void loop()
 {
 
-  //if (hay_alguien == false) {
+  if (manual == true) {
+
+    Serial.print("Manual");
 
     //-------------------------------------POTENTIOMETER
     //Read potentiometer
@@ -70,28 +77,87 @@ void loop()
     //motorSpeedPot = map(motorSpeedPot, 0, 1023, 0, 255);
     motorSpeedPot = map(motorSpeedPot, 0, 1023, 0, 360);
 
-
     // print out the value you read:
+    Serial.print("Motor: ");
     Serial.println(motorSpeedPot);
     delay(1);        // delay in between reads for stability
+  }
 
-    //-------------------------------------MOTOR
+
+  sensordistancia();
+
+  if (distance < 20) {
+    hay_alguien = true;
+    //enciendo motores
+
+  } else if (distance > 30) {
+    hay_alguien = false;
+    //apago motores
+
+  }
+
+  //------------------------------ALGUIEN
+  if (hay_alguien == true) {
+
+    Serial.print("ALGUIEN ");
+
+
+    //change variables here once I know distance
+    //map(value, fromLow, fromHigh, toLow, toHigh)
+    //map(distance, desde0, donde potencialmente esta la cabeza, speed Min, speed Max)
+
+    distanceXspeed = map(distance, 0, 20, 25, 360);
 
     //Set controlled speed of the motor & stop
-    motor.setSpeed(motorSpeedPot);
+    motor.setSpeed(distanceXspeed);
 
-    // Turn on motor
-    motor.run(FORWARD);
+    // print out the value you read:
+    Serial.print("Motor: ");
+    Serial.println(distanceXspeed);
+    delay(1);        // delay in between reads for stability
 
-    //Servo
-    //Determine the amount of motor rotation. Between 0 to 360 or 0 to 180 according to motor type.
 
-    myservo.write(motorSpeedPot);
-    delay(15);
+    //------------------------------ NADIE
 
- // }
 
- sensordistancia();
+  } else if (hay_alguien == false) {
+
+    Serial.print("................NADIE ");
+
+    //Set controlled speed of the motor & stop
+    motor.setSpeed(minSpeed);
+
+    // print out the value you read:
+    Serial.print("Motor: ");
+    Serial.println(minSpeed);
+    delay(1);        // delay in between reads for stability
+
+  }
+
+
+
+  // print out the value you read:
+  Serial.print("Motor: ");
+  Serial.println(distanceXspeed);
+  delay(1);        // delay in between reads for stability
+
+  //-------------------------------------MOTOR
+
+  //Set controlled speed of the motor & stop
+  motor.setSpeed(motorSpeedPot);
+
+  // Turn on motor
+  motor.run(FORWARD);
+
+  //Servo
+  //Determine the amount of motor rotation. Between 0 to 360 or 0 to 180 according to motor type.
+
+  //myservo.write(motorSpeedPot);
+  //delay(15);
+
+  // }
+
+
 
 }
 
