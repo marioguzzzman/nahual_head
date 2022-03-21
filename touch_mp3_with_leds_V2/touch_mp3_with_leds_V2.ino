@@ -15,9 +15,13 @@
   E1, TRACK001.mp3 will play, and so on.
 
   based on: https://github.com/BareConductive/touch_mp3_with_leds
-https://github.com/BareConductive/prox-volume/blob/public/prox_volume/prox_volume.ino
+  https://github.com/BareConductive/prox-volume/blob/public/prox_volume/prox_volume.ino
 
 *******************************************************************************/
+// I2C communication
+#include <Wire.h>
+int x;
+
 
 // compiler error handling
 #include "Compiler_Errors.h"
@@ -89,8 +93,17 @@ int ELECTRODE_NOW = 0;
 
 void setup() {
 
-  //Serial.begin(9600);
-  Serial.begin(57600);
+//  Wire.begin(4);                // join i2c bus with address #4
+//  //  Wire.onReceive(receiveEvent); // register event
+//
+//pinMode (13, OUTPUT);//Connect LED to pin 13
+//  Wire.begin(9);//9 here is the address(Mentioned even in the master board code) 
+//  Wire.onReceive(receiveEvent);
+
+  //-------------------------------------
+
+  Serial.begin(9600);
+  // Serial.begin(57600);
 
   // while (!Serial) ; {} //uncomment when using the serial monitor
   //Serial.println("Bare Conductive Touch MP3 player");
@@ -104,7 +117,7 @@ void setup() {
   MPR121.setReleaseThreshold(20);
 
   result = MP3player.begin();
-  MP3player.setVolume(volume,volume);
+  MP3player.setVolume(volume, volume);
 
 
   if (result != 0) {
@@ -147,6 +160,20 @@ void loop() {
   // update all of the data from the MPR121
   MPR121.updateAll();
 
+  //--------------- 12C COMMUNICATION
+//  delay(100);
+//   if (x > 88) {//I took the threshold as 88,you can change it to whatever you want
+//    digitalWrite(13, HIGH);
+//    delay(200);
+//  }
+//  else{
+//    digitalWrite(13, LOW);
+//    delay(400);
+//  }
+  
+  //--------------- 12C COMMUNICATION
+
+
   //******THIS IS THE SAME AS LED
   // read the difference between the measured baseline and the measured continuous data
   int reading = MPR121.getBaselineData(ELECTRODE_NOW) - MPR121.getFilteredData(ELECTRODE_NOW);
@@ -179,7 +206,7 @@ void loop() {
       analogWrite(ledPins[i], 0);
     }
   }
-// if((uint8_t)lastProx!=prox){ // only update volume if the value has changed
+  // if((uint8_t)lastProx!=prox){ // only update volume if the value has changed
   MP3player.setVolume(thisVolume, thisVolume);
 }
 
@@ -209,7 +236,7 @@ void readTouchInputs() {
                 MP3player.stopTrack();
                 Serial.print("stopping track ");
                 Serial.println(i - firstPin);
-               
+
               } else {
                 ELECTRODE_NOW = i;
                 // if we're already playing a different track (or we're in
@@ -259,3 +286,19 @@ void checkTrackFinished() {
 
   }
 }
+
+//void receiveEvent(int bytes) {
+//  x = Wire.read();//Receive value from master board
+//  Serial.print(x);
+//}
+
+//void receiveEvent(int howMany)
+//{
+//  while (1 < Wire.available()) // loop through all but the last
+//  {
+//    char c = Wire.read(); // receive byte as a character
+//    Serial.print(c);         // print the character
+//  }
+//  int x = Wire.read();    // receive byte as an integer
+//  Serial.println(x);         // print the integer
+//}
