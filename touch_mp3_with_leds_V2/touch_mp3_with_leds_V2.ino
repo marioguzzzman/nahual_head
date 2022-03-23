@@ -322,7 +322,7 @@ void timer_rolita() {
 
   if (myTime % tiempo_rolita_random == 0) {
 
-    tiempo_rolita_random = random(300, 500);
+    tiempo_rolita_random = random(500, 800);
     Serial.print("tiempo random: ");
     Serial.println (tiempo_rolita_random);
 
