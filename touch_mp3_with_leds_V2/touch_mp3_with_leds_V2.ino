@@ -22,6 +22,11 @@
 #include <Wire.h>
 int x;
 
+// TIMER
+unsigned long myTime;
+long rolita_random;
+long tiempo_rolita_random = 10;
+long vol_random;
 
 // compiler error handling
 #include "Compiler_Errors.h"
@@ -93,20 +98,20 @@ int ELECTRODE_NOW = 0;
 
 void setup() {
 
-//  Wire.begin(4);                // join i2c bus with address #4
-//  //  Wire.onReceive(receiveEvent); // register event
-//
-//pinMode (13, OUTPUT);//Connect LED to pin 13
-//  Wire.begin(9);//9 here is the address(Mentioned even in the master board code) 
-//  Wire.onReceive(receiveEvent);
+  //  Wire.begin(4);                // join i2c bus with address #4
+  //  //  Wire.onReceive(receiveEvent); // register event
+  //
+  //pinMode (13, OUTPUT);//Connect LED to pin 13
+  //  Wire.begin(9);//9 here is the address(Mentioned even in the master board code)
+  //  Wire.onReceive(receiveEvent);
 
   //-------------------------------------
 
   Serial.begin(9600);
   // Serial.begin(57600);
 
-  // while (!Serial) ; {} //uncomment when using the serial monitor
-  //Serial.println("Bare Conductive Touch MP3 player");
+  //while (!Serial) ; {} //uncomment when using the serial monitor
+  // Serial.println("Bare Conductive Touch MP3 player");
 
   if (!sd.begin(SD_SEL, SPI_HALF_SPEED)) sd.initErrorHalt();
 
@@ -154,23 +159,34 @@ void setup() {
 }
 
 void loop() {
+
+  //------------------------TIMER
+
+  timer_rolita();
+
+  //--------------------TOUCH
+
   readTouchInputs();
   //  checkTrackFinished();
 
   // update all of the data from the MPR121
   MPR121.updateAll();
 
+  Serial.println("on loop");
+  //delay(1000);
+
+
   //--------------- 12C COMMUNICATION
-//  delay(100);
-//   if (x > 88) {//I took the threshold as 88,you can change it to whatever you want
-//    digitalWrite(13, HIGH);
-//    delay(200);
-//  }
-//  else{
-//    digitalWrite(13, LOW);
-//    delay(400);
-//  }
-  
+  //  delay(100);
+  //   if (x > 88) {//I took the threshold as 88,you can change it to whatever you want
+  //    digitalWrite(13, HIGH);
+  //    delay(200);
+  //  }
+  //  else{
+  //    digitalWrite(13, LOW);
+  //    delay(400);
+  //  }
+
   //--------------- 12C COMMUNICATION
 
 
@@ -220,6 +236,11 @@ void readTouchInputs() {
     // ignore multiple touches
 
     if (MPR121.getNumTouches() <= 1) {
+
+      Serial.print("volume: ");
+      Serial.println (volume);
+
+
       for (int i = 0; i < 12; i++) { // Check which electrodes were pressed
         if (MPR121.isNewTouch(i)) {
 
@@ -286,6 +307,41 @@ void checkTrackFinished() {
 
   }
 }
+
+void timer_rolita() {
+  // if analog input pin 0 is unconnected, random analog
+  // noise will cause the call to randomSeed() to generate
+  // different seed numbers each time the sketch runs.
+  // randomSeed() will then shuffle the random function.
+  randomSeed(analogRead(0));
+
+  Serial.print("Time: ");
+  myTime = millis();
+  Serial.println(myTime); // prints time since program started
+  delay(1000);          // wait a second so as not to send massive amounts of data
+
+  if (myTime % tiempo_rolita_random == 0) {
+
+    tiempo_rolita_random = random(300, 500);
+    Serial.print("tiempo random: ");
+    Serial.println (tiempo_rolita_random);
+
+    rolita_random = random(0, 11);
+    Serial.print("TOCANDO ROLITA: ");
+    Serial.println (rolita_random);
+
+    vol_random = random(7, 20);
+    Serial.print("volume: ");
+    Serial.println (vol_random);
+
+    MP3player.stopTrack();
+    MP3player.playTrack(rolita_random);
+    MP3player.setVolume(vol_random, vol_random);
+
+
+  }
+}
+
 
 //void receiveEvent(int bytes) {
 //  x = Wire.read();//Receive value from master board
