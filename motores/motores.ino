@@ -6,9 +6,11 @@
 //si hay alguien, prende motores,
 //si no hay nadie apaga motores.
 
-boolean hay_alguien = false;
-boolean ver_distancia = false;
-boolean manual = false;
+boolean hay_alguien;
+boolean ver_distancia = true;
+boolean manual = true;
+
+int distanciaPersona = 15;
 
 //------------------------------------  I2C Master Demo
 
@@ -23,15 +25,15 @@ boolean manual = false;
 
 //-------------------------------------MOTORES
 #include <AFMotor.h>
-#include <Servo.h>
 
 //Defining the DC motor you are using.
 AF_DCMotor motor(1);
 
-Servo myservo;
-
 int distanceXspeed;
-int minSpeed = 200;
+int minSpeed = 230;
+int minSpeedMap = 200;
+
+  int x;
 
 
 //-------------------------------------POTENTIOMETER
@@ -49,24 +51,23 @@ const int echoPin = A0;
 long duration; // variable for the duration of sound wave travel
 int distance; // variable for the distance measurement
 
+//--------------------------------------------------SETUP
+//--------------------------------------------------SETUP
 void setup()
 {
 
   //------------------ Initialize I2C communications as Master
   //Wire.begin();
-  
+
   // Setup serial monitor
   Serial.begin(9600);
-  Serial.println("I2C Master Demonstration");
+  //Serial.println("I2C Master Demonstration");
 
 
   //-----------------------------------------MOTOR
   //Set initial speed of the motor & stop
-  motor.setSpeed(0);
-  motor.run(RELEASE);
-
-  myservo.attach(9);   //Determine the pin connecting to Servo.(pin 9 for sevo #1 and pin 10 for servo #2)
-
+  motor.setSpeed(minSpeed);
+  //motor.run(RELEASE);
 
   //---SENSOR DISTANCIA --
 
@@ -77,54 +78,65 @@ void setup()
   Serial.println("with Arduino UNO R3");
 }
 
+//--------------------------------------------------LOOP
+//--------------------------------------------------LOOP
+
 void loop()
 {
 
-      motor.setSpeed(150);
+  //  motor.setSpeed(200);
+
+//   //Set controlled speed of the motor & stop
+//    motor.setSpeed(minSpeed);       //-------------------------------------MOTOR ALGUIEN
+//    // Turn on motor
+//  motor.run(BACKWARD);
+  
 
 
-//------------------------------------  I2C Master Demo
+  //------------------------------------  I2C Master Demo
 
-//   delay(50);
-//  Serial.println("Write data to slave");
-//  
-//  // Write a charatre to the Slave
-//  Wire.beginTransmission(SLAVE_ADDR);
-//  Wire.write(0);
-//  Wire.endTransmission();
-//    
-//  Serial.println("Receive data");
-//  
-//  // Read response from Slave
-//  // Read back 5 characters
-//  Wire.requestFrom(SLAVE_ADDR,ANSWERSIZE);
-//  
-//  // Add characters to string
-//  String response = "";
-//  while (Wire.available()) {
-//      char b = Wire.read();
-//      response += b;
-//  } 
-//  
-//  // Print to Serial Monitor
-//  Serial.println(response);
+  //   delay(50);
+  //  Serial.println("Write data to slave");
+  //
+  //  // Write a charatre to the Slave
+  //  Wire.beginTransmission(SLAVE_ADDR);
+  //  Wire.write(0);
+  //  Wire.endTransmission();
+  //
+  //  Serial.println("Receive data");
+  //
+  //  // Read response from Slave
+  //  // Read back 5 characters
+  //  Wire.requestFrom(SLAVE_ADDR,ANSWERSIZE);
+  //
+  //  // Add characters to string
+  //  String response = "";
+  //  while (Wire.available()) {
+  //      char b = Wire.read();
+  //      response += b;
+  //  }
+  //
+  //  // Print to Serial Monitor
+  //  Serial.println(response);
 
-sensordistancia();
+  sensordistancia();
 
-  if (distance < 20) {
+  if (distance < distanciaPersona) {
     hay_alguien = true;
     //enciendo motores
 
-  } else if (distance > 30) {
+  } else if (distance > distanciaPersona) {
     hay_alguien = false;
     //apago motores
 
   }
 
-//-----------------------------------------------
-  if (manual == true) {
+  //----------------------------------------------- MANUAL
+  //if (manual == true) {
 
-    Serial.print("Manual");
+   // Serial.print("Manual");
+   // Serial.print("    ");
+    //delay(1000);
 
     //-------------------------------------POTENTIOMETER
     //Read potentiometer
@@ -133,80 +145,48 @@ sensordistancia();
 
     /* Map an analog value to 8 bits (0 to 255) */
     //motorSpeedPot = map(motorSpeedPot, 0, 1023, 0, 255);
-    motorSpeedPot = map(motorSpeedPot, 0, 1023, 0, 300);
+    motorSpeedPot = map(motorSpeedPot, 0, 1023, 0, 255);
 
     // print out the value you read:
-    Serial.print("Motor: ");
-    Serial.println(motorSpeedPot);
-    delay(1);        // delay in between reads for stability
+   // Serial.print("Motor: ");
+    //Serial.println(motorSpeedPot);
+    //delay(1);        // delay in between reads for stability
 
-    
-  } 
-
-  
-
-  //------------------------------ALGUIEN
-  if (hay_alguien == true) {
-
+  //} else 
+  if (hay_alguien == true) {  //------------------------------ALGUIEN
     Serial.print("ALGUIEN ");
-
+    Serial.print("    ");
+    delay(1);
 
     //change variables here once I know distance
     //map(value, fromLow, fromHigh, toLow, toHigh)
     //map(distance, desde0, donde potencialmente esta la cabeza, speed Min, speed Max)
+    
+    distanceXspeed = map(distance, 0, distanciaPersona, minSpeedMap, 255);
 
-    distanceXspeed = map(distance, 0, 10, 150, 360);
+//    //Set controlled speed of the motor & stop
+    motor.setSpeed(distanceXspeed);       //-------------------------------------MOTOR ALGUIEN
+    // Turn on motor
+  motor.run(BACKWARD);
 
-    //Set controlled speed of the motor & stop
-    motor.setSpeed(distanceXspeed);
-
-    // print out the value you read:
+       // print out the value you read:
     Serial.print("Motor: ");
     Serial.println(distanceXspeed);
     delay(1);        // delay in between reads for stability
 
-
-    //------------------------------ NADIE
-
-
-  } else if (hay_alguien == false) {
-
+  
+  } else { //------------------------ NADIE
     Serial.print("................NADIE ");
+    delay(1);        // delay in between reads for stability
 
     //Set controlled speed of the motor & stop
-    motor.setSpeed(minSpeed);
-
-    // print out the value you read:
-    Serial.print("Motor: ");
-    Serial.println(minSpeed);
-    delay(1);        // delay in between reads for stability
+    motor.setSpeed(0);      //-------------------------------------MOTOR NADIE
+     // Turn on motor
+  motor.run(BACKWARD);
 
   }
 
-
-
-  // print out the value you read:
-  Serial.print("Motor: ");
-  Serial.println(distanceXspeed);
-  delay(1);        // delay in between reads for stability
-
-  //-------------------------------------MOTOR
-
-  //Set controlled speed of the motor & stop
-  motor.setSpeed(motorSpeedPot);
-
-  // Turn on motor
-  motor.run(FORWARD);
-
-  //Servo
-  //Determine the amount of motor rotation. Between 0 to 360 or 0 to 180 according to motor type.
-
-  //myservo.write(motorSpeedPot);
-  //delay(15);
-
-  // }
-
-  
+ 
 
 }
 
