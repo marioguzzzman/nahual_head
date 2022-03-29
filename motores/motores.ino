@@ -7,7 +7,7 @@
 //si no hay nadie apaga motores.
 
 boolean hay_alguien = false;
-boolean ver_distancia = true;
+boolean ver_distancia = false;
 boolean manual = false;
 
 //------------------------------------  I2C Master Demo
@@ -31,7 +31,7 @@ AF_DCMotor motor(1);
 Servo myservo;
 
 int distanceXspeed;
-int minSpeed = 20;
+int minSpeed = 200;
 
 
 //-------------------------------------POTENTIOMETER
@@ -80,6 +80,9 @@ void setup()
 void loop()
 {
 
+      motor.setSpeed(150);
+
+
 //------------------------------------  I2C Master Demo
 
 //   delay(50);
@@ -106,6 +109,18 @@ void loop()
 //  // Print to Serial Monitor
 //  Serial.println(response);
 
+sensordistancia();
+
+  if (distance < 20) {
+    hay_alguien = true;
+    //enciendo motores
+
+  } else if (distance > 30) {
+    hay_alguien = false;
+    //apago motores
+
+  }
+
 //-----------------------------------------------
   if (manual == true) {
 
@@ -118,26 +133,17 @@ void loop()
 
     /* Map an analog value to 8 bits (0 to 255) */
     //motorSpeedPot = map(motorSpeedPot, 0, 1023, 0, 255);
-    motorSpeedPot = map(motorSpeedPot, 0, 1023, 0, 360);
+    motorSpeedPot = map(motorSpeedPot, 0, 1023, 0, 300);
 
     // print out the value you read:
     Serial.print("Motor: ");
     Serial.println(motorSpeedPot);
     delay(1);        // delay in between reads for stability
-  }
 
+    
+  } 
 
-  sensordistancia();
-
-  if (distance < 20) {
-    hay_alguien = true;
-    //enciendo motores
-
-  } else if (distance > 30) {
-    hay_alguien = false;
-    //apago motores
-
-  }
+  
 
   //------------------------------ALGUIEN
   if (hay_alguien == true) {
@@ -149,7 +155,7 @@ void loop()
     //map(value, fromLow, fromHigh, toLow, toHigh)
     //map(distance, desde0, donde potencialmente esta la cabeza, speed Min, speed Max)
 
-    distanceXspeed = map(distance, 0, 20, 25, 360);
+    distanceXspeed = map(distance, 0, 10, 150, 360);
 
     //Set controlled speed of the motor & stop
     motor.setSpeed(distanceXspeed);
@@ -200,7 +206,7 @@ void loop()
 
   // }
 
-
+  
 
 }
 
