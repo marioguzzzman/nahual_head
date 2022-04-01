@@ -14,14 +14,14 @@ int distanciaPersona = 15;
 
 //------------------------------------  I2C Master Demo
 
-// Include Arduino Wire library for I2C
-#include <Wire.h>
-
-// Define Slave I2C Address
-#define SLAVE_ADDR 9
-
-// Define Slave answer size
-#define ANSWERSIZE 5
+//// Include Arduino Wire library for I2C
+//#include <Wire.h>
+//
+//// Define Slave I2C Address
+//#define SLAVE_ADDR 9
+//
+//// Define Slave answer size
+//#define ANSWERSIZE 5
 
 //-------------------------------------MOTORES
 #include <AFMotor.h>
