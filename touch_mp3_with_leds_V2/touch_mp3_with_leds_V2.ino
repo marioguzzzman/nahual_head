@@ -103,7 +103,7 @@ int ELECTRODE_NOW = 0;
 
 void setup() {
 
-  pinMode(inPin, INPUT_PULLUP);
+  pinMode(inPin, INPUT);
 
   //  Wire.begin(4);                // join i2c bus with address #4
   //  //  Wire.onReceive(receiveEvent); // register event

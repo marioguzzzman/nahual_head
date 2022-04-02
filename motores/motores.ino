@@ -93,7 +93,9 @@ void loop()
     //Serial.println('a');
 //    digitalWrite(2, HIGH);
         digitalWrite(2, HIGH);
-        Serial.println("mando data");
+        //Serial.println("mando data");
+        Serial.println(digitalWrite(2);
+
         //delay(1000);
 
       //delay(250);
