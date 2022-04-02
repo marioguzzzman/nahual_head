@@ -13,7 +13,7 @@ boolean manual = true;
 int distanciaPersona = 15;
 
 int count;
-int dataSend = 2;
+int sendPin = 0;
 
 //------------------------------------  I2C Master Demo
 
@@ -59,14 +59,10 @@ int distance; // variable for the distance measurement
 void setup()
 {
 
-  pinMode(2, OUTPUT);
+  pinMode(sendPin, OUTPUT);
 
-  //------------------ Initialize I2C communications as Master
-  //Wire.begin();
-
-  // Setup serial monitor
+ // Setup serial monitor
   Serial.begin(9600);
-  //Serial.println("I2C Master Demonstration");
 
 
   //-----------------------------------------MOTOR
@@ -95,14 +91,8 @@ void loop()
         digitalWrite(2, HIGH);
         //Serial.println("mando data");
         Serial.println(digitalWrite(2);
-
-        //delay(1000);
-
-      //delay(250);
   } else {
-   // digitalWrite(2, LOW);
-    digitalWrite(2, LOW);
-//delay(2000);
+    digitalWrite(sendPin, LOW);
   }
   count++;
 
@@ -114,34 +104,6 @@ void loop()
   //    motor.setSpeed(minSpeed);       //-------------------------------------MOTOR ALGUIEN
   //    // Turn on motor
   //  motor.run(BACKWARD);
-
-
-
-  //------------------------------------  I2C Master Demo
-
-  //   delay(50);
-  //  Serial.println("Write data to slave");
-  //
-  //  // Write a charatre to the Slave
-  //  Wire.beginTransmission(SLAVE_ADDR);
-  //  Wire.write(0);
-  //  Wire.endTransmission();
-  //
-  //  Serial.println("Receive data");
-  //
-  //  // Read response from Slave
-  //  // Read back 5 characters
-  //  Wire.requestFrom(SLAVE_ADDR,ANSWERSIZE);
-  //
-  //  // Add characters to string
-  //  String response = "";
-  //  while (Wire.available()) {
-  //      char b = Wire.read();
-  //      response += b;
-  //  }
-  //
-  //  // Print to Serial Monitor
-  //  Serial.println(response);
 
   sensordistancia();
 
@@ -209,8 +171,6 @@ void loop()
     motor.run(BACKWARD);
 
   }
-
-
 
 }
 
