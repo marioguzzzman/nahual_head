@@ -90,7 +90,7 @@ void loop()
 //    digitalWrite(2, HIGH);
         digitalWrite(2, HIGH);
         //Serial.println("mando data");
-        Serial.println(digitalWrite(2);
+        //Serial.println(digitalWrite(sendPin);
   } else {
     digitalWrite(sendPin, LOW);
   }
