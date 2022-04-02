@@ -22,9 +22,9 @@
 #include <Wire.h>
 int x;
 
+//Send data
 int count;
-int inPin = 7;
-int valPin = 0;      // variable to store the read value
+int inPin = 11;
 
 
 // TIMER

@@ -12,6 +12,7 @@ boolean manual = true;
 
 int distanciaPersona = 15;
 
+// send data to Touchboard
 int count;
 int dataSend = 2;
 
@@ -52,8 +53,6 @@ void setup()
 
    // Setup serial monitor
   Serial.begin(9600);
-  //Serial.println("I2C Master Demonstration");
-
 
   //-----------------------------------------MOTOR
   //Set initial speed of the motor & stop
@@ -75,24 +74,7 @@ void setup()
 void loop()
 {
 
-  if (count % 10 == 0) {
-    //Serial.println('a');
-//    digitalWrite(2, HIGH);
-        digitalWrite(dataSend, HIGH);
-        //Serial.println("mando data");
-        //Serial.println(digitalWrite(2));
-
-        //delay(1000);
-
-      //delay(250);
-  } else {
-   // digitalWrite(sendPin, LOW);
-    digitalWrite(dataSend, LOW);
-//delay(2000);
-  }
-  count++;
-
-  delay(100);
+ //testSendData();
 
   //  motor.setSpeed(200);
 
@@ -107,10 +89,13 @@ void loop()
   if (distance < distanciaPersona) {
     hay_alguien = true;
     //enciendo motores
+     digitalWrite(dataSend, HIGH); //Envio info a touchboard desde digitalpin 2
 
   } else if (distance > distanciaPersona) {
     hay_alguien = false;
     //apago motores
+
+    digitalWrite(dataSend, LOW); //Envio info a touchboard desde digitalpin 2
 
   }
 
@@ -168,9 +153,6 @@ void loop()
     motor.run(BACKWARD);
 
   }
-
-
-
 }
 
 void sensordistancia () {
@@ -188,4 +170,24 @@ void sensordistancia () {
   Serial.print("Distance: ");
   Serial.print(distance);
   Serial.println(" cm");
+}
+
+void testSendData() {
+  if (count % 10 == 0) {
+    //Serial.println('a');
+//    digitalWrite(2, HIGH);
+        digitalWrite(dataSend, HIGH);
+        //Serial.println("mando data");
+        //Serial.println(digitalWrite(2));
+
+        //delay(1000);
+
+      //delay(250);
+  } else {
+   // digitalWrite(sendPin, LOW);
+    digitalWrite(dataSend, LOW);
+//delay(2000);
+  }
+  count++;
+    delay(100);
 }
