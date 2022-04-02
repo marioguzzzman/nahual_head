@@ -13,18 +13,7 @@ boolean manual = true;
 int distanciaPersona = 15;
 
 int count;
-int sendPin = 0;
-
-//------------------------------------  I2C Master Demo
-
-//// Include Arduino Wire library for I2C
-//#include <Wire.h>
-//
-//// Define Slave I2C Address
-//#define SLAVE_ADDR 9
-//
-//// Define Slave answer size
-//#define ANSWERSIZE 5
+int dataSend = 2;
 
 //-------------------------------------MOTORES
 #include <AFMotor.h>
@@ -59,10 +48,11 @@ int distance; // variable for the distance measurement
 void setup()
 {
 
-  pinMode(sendPin, OUTPUT);
+  pinMode(dataSend, OUTPUT);
 
- // Setup serial monitor
+   // Setup serial monitor
   Serial.begin(9600);
+  //Serial.println("I2C Master Demonstration");
 
 
   //-----------------------------------------MOTOR
@@ -88,11 +78,17 @@ void loop()
   if (count % 10 == 0) {
     //Serial.println('a');
 //    digitalWrite(2, HIGH);
-        digitalWrite(2, HIGH);
+        digitalWrite(dataSend, HIGH);
         //Serial.println("mando data");
-        //Serial.println(digitalWrite(sendPin);
+        //Serial.println(digitalWrite(2));
+
+        //delay(1000);
+
+      //delay(250);
   } else {
-    digitalWrite(sendPin, LOW);
+   // digitalWrite(sendPin, LOW);
+    digitalWrite(dataSend, LOW);
+//delay(2000);
   }
   count++;
 
@@ -104,6 +100,7 @@ void loop()
   //    motor.setSpeed(minSpeed);       //-------------------------------------MOTOR ALGUIEN
   //    // Turn on motor
   //  motor.run(BACKWARD);
+
 
   sensordistancia();
 
@@ -171,6 +168,8 @@ void loop()
     motor.run(BACKWARD);
 
   }
+
+
 
 }
 
