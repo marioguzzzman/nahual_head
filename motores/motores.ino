@@ -89,18 +89,19 @@ void setup()
 void loop()
 {
 
-  //if (count % 10 == 0) {
+  if (count % 10 == 0) {
     //Serial.println('a');
 //    digitalWrite(2, HIGH);
-        digitalWrite(2, LOW);
-        delay(1000);
+        digitalWrite(2, HIGH);
+        Serial.println("mando data");
+        //delay(1000);
 
       //delay(250);
-  //} else {
+  } else {
    // digitalWrite(2, LOW);
-    digitalWrite(2, HIGH);
-delay(2000);
-  //}
+    digitalWrite(2, LOW);
+//delay(2000);
+  }
   count++;
 
   delay(100);

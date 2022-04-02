@@ -23,7 +23,7 @@
 int x;
 
 int count;
-int inPin = 5;
+int inPin = 7;
 int valPin = 0;      // variable to store the read value
 
 
@@ -103,7 +103,7 @@ int ELECTRODE_NOW = 0;
 
 void setup() {
 
-  pinMode(inPin, INPUT);
+  pinMode(inPin, INPUT_PULLUP);
 
   //  Wire.begin(4);                // join i2c bus with address #4
   //  //  Wire.onReceive(receiveEvent); // register event
@@ -222,13 +222,15 @@ checkdata();
 }
 
 void checkdata(){
-   if (digitalRead(inPin) == HIGH) {
+   if (digitalRead(inPin) == 0) {
     Serial.println("llego data");
-    digitalWrite(13, HIGH);
-    //delay(250);
-  } else {
     digitalWrite(13, LOW);
+    //delay(250);
+  } else if (digitalRead(inPin) == 1) {
+    digitalWrite(13, HIGH);
   }
+
+  Serial.println(digitalRead(inPin));
 
 
 //  valPin = digitalRead(inPin);   // read the input pin
