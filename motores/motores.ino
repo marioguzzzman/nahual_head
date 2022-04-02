@@ -12,6 +12,9 @@ boolean manual = true;
 
 int distanciaPersona = 15;
 
+int count;
+int dataSend = 2;
+
 //------------------------------------  I2C Master Demo
 
 //// Include Arduino Wire library for I2C
@@ -33,7 +36,7 @@ int distanceXspeed;
 int minSpeed = 230;
 int minSpeedMap = 200;
 
-  int x;
+int x;
 
 
 //-------------------------------------POTENTIOMETER
@@ -55,6 +58,8 @@ int distance; // variable for the distance measurement
 //--------------------------------------------------SETUP
 void setup()
 {
+
+  pinMode(2, OUTPUT);
 
   //------------------ Initialize I2C communications as Master
   //Wire.begin();
@@ -84,13 +89,29 @@ void setup()
 void loop()
 {
 
+  //if (count % 10 == 0) {
+    //Serial.println('a');
+//    digitalWrite(2, HIGH);
+        digitalWrite(2, LOW);
+        delay(1000);
+
+      //delay(250);
+  //} else {
+   // digitalWrite(2, LOW);
+    digitalWrite(2, HIGH);
+delay(2000);
+  //}
+  count++;
+
+  delay(100);
+
   //  motor.setSpeed(200);
 
-//   //Set controlled speed of the motor & stop
-//    motor.setSpeed(minSpeed);       //-------------------------------------MOTOR ALGUIEN
-//    // Turn on motor
-//  motor.run(BACKWARD);
-  
+  //   //Set controlled speed of the motor & stop
+  //    motor.setSpeed(minSpeed);       //-------------------------------------MOTOR ALGUIEN
+  //    // Turn on motor
+  //  motor.run(BACKWARD);
+
 
 
   //------------------------------------  I2C Master Demo
@@ -134,25 +155,25 @@ void loop()
   //----------------------------------------------- MANUAL
   //if (manual == true) {
 
-   // Serial.print("Manual");
-   // Serial.print("    ");
-    //delay(1000);
+  // Serial.print("Manual");
+  // Serial.print("    ");
+  //delay(1000);
 
-    //-------------------------------------POTENTIOMETER
-    //Read potentiometer
-    // read the input on analog pin 5:
-    motorSpeedPot = analogRead(A3);
+  //-------------------------------------POTENTIOMETER
+  //Read potentiometer
+  // read the input on analog pin 5:
+  motorSpeedPot = analogRead(A3);
 
-    /* Map an analog value to 8 bits (0 to 255) */
-    //motorSpeedPot = map(motorSpeedPot, 0, 1023, 0, 255);
-    motorSpeedPot = map(motorSpeedPot, 0, 1023, 0, 255);
+  /* Map an analog value to 8 bits (0 to 255) */
+  //motorSpeedPot = map(motorSpeedPot, 0, 1023, 0, 255);
+  motorSpeedPot = map(motorSpeedPot, 0, 1023, 0, 255);
 
-    // print out the value you read:
-   // Serial.print("Motor: ");
-    //Serial.println(motorSpeedPot);
-    //delay(1);        // delay in between reads for stability
+  // print out the value you read:
+  // Serial.print("Motor: ");
+  //Serial.println(motorSpeedPot);
+  //delay(1);        // delay in between reads for stability
 
-  //} else 
+  //} else
   if (hay_alguien == true) {  //------------------------------ALGUIEN
     Serial.print("ALGUIEN ");
     Serial.print("    ");
@@ -161,32 +182,32 @@ void loop()
     //change variables here once I know distance
     //map(value, fromLow, fromHigh, toLow, toHigh)
     //map(distance, desde0, donde potencialmente esta la cabeza, speed Min, speed Max)
-    
+
     distanceXspeed = map(distance, 0, distanciaPersona, minSpeedMap, 255);
 
-//    //Set controlled speed of the motor & stop
+    //    //Set controlled speed of the motor & stop
     motor.setSpeed(distanceXspeed);       //-------------------------------------MOTOR ALGUIEN
     // Turn on motor
-  motor.run(BACKWARD);
+    motor.run(BACKWARD);
 
-       // print out the value you read:
+    // print out the value you read:
     Serial.print("Motor: ");
     Serial.println(distanceXspeed);
     delay(1);        // delay in between reads for stability
 
-  
+
   } else { //------------------------ NADIE
     Serial.print("................NADIE ");
     delay(1);        // delay in between reads for stability
 
     //Set controlled speed of the motor & stop
     motor.setSpeed(0);      //-------------------------------------MOTOR NADIE
-     // Turn on motor
-  motor.run(BACKWARD);
+    // Turn on motor
+    motor.run(BACKWARD);
 
   }
 
- 
+
 
 }
 

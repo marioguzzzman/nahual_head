@@ -22,6 +22,11 @@
 #include <Wire.h>
 int x;
 
+int count;
+int inPin = 5;
+int valPin = 0;      // variable to store the read value
+
+
 // TIMER
 unsigned long myTime;
 long rolita_random;
@@ -98,6 +103,8 @@ int ELECTRODE_NOW = 0;
 
 void setup() {
 
+  pinMode(inPin, INPUT);
+
   //  Wire.begin(4);                // join i2c bus with address #4
   //  //  Wire.onReceive(receiveEvent); // register event
   //
@@ -160,6 +167,9 @@ void setup() {
 
 void loop() {
 
+checkdata();
+ 
+
   //------------------------TIMER
 
   timer_rolita();
@@ -173,22 +183,7 @@ void loop() {
   MPR121.updateAll();
 
   Serial.println("on loop");
-  //delay(1000);
-
-
-  //--------------- 12C COMMUNICATION
-  //  delay(100);
-  //   if (x > 88) {//I took the threshold as 88,you can change it to whatever you want
-  //    digitalWrite(13, HIGH);
-  //    delay(200);
-  //  }
-  //  else{
-  //    digitalWrite(13, LOW);
-  //    delay(400);
-  //  }
-
-  //--------------- 12C COMMUNICATION
-
+ 
 
   //******THIS IS THE SAME AS LED
   // read the difference between the measured baseline and the measured continuous data
@@ -224,6 +219,20 @@ void loop() {
   }
   // if((uint8_t)lastProx!=prox){ // only update volume if the value has changed
   MP3player.setVolume(thisVolume, thisVolume);
+}
+
+void checkdata(){
+   if (digitalRead(inPin) == HIGH) {
+    Serial.println("llego data");
+    digitalWrite(13, HIGH);
+    //delay(250);
+  } else {
+    digitalWrite(13, LOW);
+  }
+
+
+//  valPin = digitalRead(inPin);   // read the input pin
+//  digitalWrite(13, valPin);  // sets the LED to the button's value
 }
 
 
