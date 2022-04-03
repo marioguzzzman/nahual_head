@@ -152,7 +152,7 @@ void setup() {
 void loop() {
 
   checkdata();
-  testSendData();
+  //testSendData();
 
   //------------------------TIMER
 
@@ -278,6 +278,7 @@ void readTouchInputs() {
                 lastPlayed = i;
 
                 digitalWrite(outPin, HIGH);// SEND DATA, MUSIC IS PLAYIN
+                delay(1000);
 
               }
             } else {
