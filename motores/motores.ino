@@ -87,7 +87,7 @@ void loop()
 
   checkdata();
 
-  testSendData();
+  //testSendData();
 
   sensordistancia();
 

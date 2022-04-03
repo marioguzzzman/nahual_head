@@ -174,6 +174,8 @@ void loop() {
 
   checkdata();
 
+  testSendData();
+
   //------------------------TIMER
 
   timer_rolita();
@@ -239,20 +241,6 @@ void checkdata() {
     Serial.println("------HAY ALGUIEN");
 
     rolita_alguien();
-
-      randomSeed(analogRead(0));
-
-    rolita_random = random(0, 11);
-
-    Serial.print(" ROLITA ALGUIEN: ");
-    Serial.println (rolita_random);
-
-    Serial.print("volume: ");
-    Serial.println (vol_random);
-
-    MP3player.stopTrack();
-    MP3player.playTrack(rolita_random);
-    MP3player.setVolume(20, 20);
 
   } else if (digitalRead(inPin) == 0) {
     digitalWrite(13, LOW);
@@ -418,5 +406,27 @@ void rolita_alguien() {
   }
   count++;
   delay(1000);
+
+}
+
+
+void testSendData() {
+  if (count % 10 == 0) {
+    //Serial.println('a');
+    //    digitalWrite(, HIGH);
+    digitalWrite(outPin, HIGH);
+    Serial.println("mando data");
+
+    //delay(1000);
+
+    //delay(250);
+  } else {
+    // digitalWrite(sendPin, LOW);
+    digitalWrite(outPin, LOW);
+    //delay(2000);
+  }
+  count++;
+  delay(100);
+   //   Serial.println(digitalWrite(dataSend));
 
 }
