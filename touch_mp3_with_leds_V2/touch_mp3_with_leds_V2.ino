@@ -1,27 +1,19 @@
 
 /*******************************************************************************
-
-
   -----BIENAL LATINOAMERICANA DE INTELIGENCIA ARTIFICIAL---
   Mario Alberto Guzman Cerdio
   mariouzzzman@gmail.com
 
-  Touch_MP3.ino - touch triggered MP3 playback
-
-  You need twelve MP3 files named TRACK000.mp3 to TRACK011.mp3 in the root of the
+  You need twelve MP3 named TRACK000.mp3 to TRACK011.mp3 in the root of
   microSD card.
 
   When you touch electrode E0, TRACK000.mp3 will play. When you touch electrode
-  E1, TRACK001.mp3 will play, and so on.
+  E1, TRACK001.mp3 will play
 
   based on: https://github.com/BareConductive/touch_mp3_with_leds
   https://github.com/BareConductive/prox-volume/blob/public/prox_volume/prox_volume.ino
 
 *******************************************************************************/
-//// I2C communication
-//#include <Wire.h>
-//int x;
-
 //Hay alguien
 boolean hay_alguien;
 
@@ -29,7 +21,6 @@ boolean hay_alguien;
 int count;
 int inPin = 11;
 int outPin = 10;
-
 
 // TIMER
 unsigned long myTime;
@@ -58,7 +49,6 @@ byte result;
 int lastPlayed = 0;
 uint8_t volume = 0;
 
-
 // mp3 behaviour defines
 #define REPLAY_MODE FALSE  // By default, touching an electrode repeatedly will 
 // play the track again from the start each time.
@@ -82,7 +72,6 @@ SdFat sd;
 const int ledPins[3] = {10, 11, 13};
 //const int ledPins[6] = {5, 6, 9, 10, 11, 13};
 
-
 // mapping and filter definitions
 #define LOW_DIFF 0
 #define HIGH_DIFF 50
@@ -103,7 +92,6 @@ int ELECTRODE_NOW = 0;
 //#ifndef LED_BUILTIN
 //#define LED_BUILTIN 13
 //#endif
-
 
 void setup() {
 
@@ -136,24 +124,16 @@ void setup() {
   result = MP3player.begin();
   MP3player.setVolume(volume, volume);
 
-
   if (result != 0) {
     Serial.print("Error code: ");
     Serial.print(result);
     Serial.println(" when trying to start MP3 player");
   }
 
-  //for (int i = firstPin; i <= lastPin; i++) {
-  //pinMode(ledPins[i], OUTPUT);
-  //digitalWrite(ledPins[i], LOW);
-  // analogWrite(ledPins[i], LOW);
-  //}
-
   //pinMode(LED_BUILTIN, OUTPUT);
   pinMode(ledPins[0], OUTPUT); // initialize the pin
   pinMode(ledPins[1], OUTPUT); // initialize the pin
   pinMode(ledPins[2], OUTPUT); // initialize the pin
-
 
   //This supplies 5 volts to the LED anode,the positive leg
   //(pin,pwm value)
@@ -161,7 +141,6 @@ void setup() {
   analogWrite(ledPins[0], 0);
   analogWrite(ledPins[1], 0);
   analogWrite(ledPins[2], 0);
-
 
   // slow down some of the MPR121 baseline filtering to avoid
   // filtering out slow hand movements
@@ -173,7 +152,6 @@ void setup() {
 void loop() {
 
   checkdata();
-
   testSendData();
 
   //------------------------TIMER
@@ -190,13 +168,12 @@ void loop() {
 
   Serial.println("on loop");
 
-
   //******THIS IS THE SAME AS LED
   // read the difference between the measured baseline and the measured continuous data
   int reading = MPR121.getBaselineData(ELECTRODE_NOW) - MPR121.getFilteredData(ELECTRODE_NOW);
 
   // print out the reading value for debug
-  Serial.println(reading);
+ // Serial.println(reading);
 
   // constrain the reading between our low and high mapping values
   unsigned int prox = constrain(reading, LOW_DIFF, HIGH_DIFF);
@@ -207,12 +184,6 @@ void loop() {
   // map the LOW_DIFF..HIGH_DIFF range to 0..255 (8-bit resolution for analogWrite)
   uint8_t thisOutput = (uint8_t)map(lastProx, LOW_DIFF, HIGH_DIFF, 0, 255);
   uint8_t thisVolume = (uint8_t)map(lastProx, LOW_DIFF, HIGH_DIFF, 0, 254);
-
-  // output the mapped value to the LED
-  // analogWrite(LED_BUILTIN, thisOutput);
-  //analogWrite(ledPins[0], 0);
-  //analogWrite(ledPins[1], 0);
-  // analogWrite(ledPins[2], 0);
 
   //analogWrite(ELECTRODE_NOW, thisOutput);
   //analogWrite(ledPins[1], thisOutput);
@@ -249,10 +220,9 @@ void checkdata() {
     Serial.println("------NADIE");
     //rolita_alguien();
 
-
   }
 
-  Serial.println(digitalRead(inPin));
+  //Serial.println(digitalRead(inPin));
 
 }
 
@@ -267,8 +237,8 @@ void readTouchInputs() {
 
     if (MPR121.getNumTouches() <= 1) {
 
-      Serial.print("volume: ");
-      Serial.println (volume);
+     // Serial.print("volume: ");
+      //Serial.println (volume);
 
 
       for (int i = 0; i < 12; i++) { // Check which electrodes were pressed
@@ -427,6 +397,6 @@ void testSendData() {
   }
   count++;
   delay(100);
-   //   Serial.println(digitalWrite(dataSend));
+  //   Serial.println(digitalWrite(dataSend));
 
 }
