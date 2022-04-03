@@ -18,13 +18,17 @@
   https://github.com/BareConductive/prox-volume/blob/public/prox_volume/prox_volume.ino
 
 *******************************************************************************/
-// I2C communication
-#include <Wire.h>
-int x;
+//// I2C communication
+//#include <Wire.h>
+//int x;
+
+//Hay alguien
+boolean hay_alguien;
 
 //Send data
 int count;
 int inPin = 11;
+int outPin = 10;
 
 
 // TIMER
@@ -103,7 +107,11 @@ int ELECTRODE_NOW = 0;
 
 void setup() {
 
+  //recieve data
   pinMode(inPin, INPUT);
+
+  //Send data
+  pinMode(outPin, OUTPUT);
 
   //  Wire.begin(4);                // join i2c bus with address #4
   //  //  Wire.onReceive(receiveEvent); // register event
@@ -167,8 +175,7 @@ void setup() {
 
 void loop() {
 
-checkdata();
- 
+  checkdata();
 
   //------------------------TIMER
 
@@ -183,7 +190,7 @@ checkdata();
   MPR121.updateAll();
 
   Serial.println("on loop");
- 
+
 
   //******THIS IS THE SAME AS LED
   // read the difference between the measured baseline and the measured continuous data
@@ -221,20 +228,32 @@ checkdata();
   MP3player.setVolume(thisVolume, thisVolume);
 }
 
-void checkdata(){
-   if (digitalRead(inPin) == 0) {
-    Serial.println("llego data");
-    digitalWrite(13, LOW);
-    //delay(250);
-  } else if (digitalRead(inPin) == 1) {
+//---------------------------------------
+//------------------ END LOOP -----------
+//---------------------------------------
+
+
+//----------------------------CHECK DATA
+void checkdata() {
+
+  if (digitalRead(inPin) == 1) {
     digitalWrite(13, HIGH);
+    hay_alguien = false;
+    Serial.println("------HAY ALGUIEN");
+
+    rolita_alguien();
+
+  } else if (digitalRead(inPin) == 0) {
+    digitalWrite(13, LOW);
+    hay_alguien = true;
+    Serial.println("------NADIE");
+        rolita_alguien();
+
+
   }
 
   Serial.println(digitalRead(inPin));
 
-
-//  valPin = digitalRead(inPin);   // read the input pin
-//  digitalWrite(13, valPin);  // sets the LED to the button's value
 }
 
 
@@ -269,6 +288,8 @@ void readTouchInputs() {
                 Serial.print("stopping track ");
                 Serial.println(i - firstPin);
 
+                digitalWrite(outPin, LOW); // SEND DATA, MUSIC STORED
+
               } else {
                 ELECTRODE_NOW = i;
                 // if we're already playing a different track (or we're in
@@ -285,6 +306,9 @@ void readTouchInputs() {
                 // don't forget to update lastPlayed - without it we don't
                 // have a history
                 lastPlayed = i;
+
+                digitalWrite(outPin, HIGH);// SEND DATA, MUSIC IS PLAYIN
+
               }
             } else {
 
@@ -296,6 +320,7 @@ void readTouchInputs() {
               //Serial.println(i - firstPin);
 
               lastPlayed = i;
+
             }
           }
         } else {
@@ -354,18 +379,32 @@ void timer_rolita() {
 }
 
 
-//void receiveEvent(int bytes) {
-//  x = Wire.read();//Receive value from master board
-//  Serial.print(x);
-//}
+void rolita_alguien() {
+  if (count % 30 == 0) {
+    //digitalWrite(dataSend, HIGH);
 
-//void receiveEvent(int howMany)
-//{
-//  while (1 < Wire.available()) // loop through all but the last
-//  {
-//    char c = Wire.read(); // receive byte as a character
-//    Serial.print(c);         // print the character
-//  }
-//  int x = Wire.read();    // receive byte as an integer
-//  Serial.println(x);         // print the integer
-//}
+    // if analog input pin 0 is unconnected, random analog
+    // noise will cause the call to randomSeed() to generate
+    // different seed numbers each time the sketch runs.
+    // randomSeed() will then shuffle the random function.
+    randomSeed(analogRead(0));
+
+    rolita_random = random(0, 11);
+
+    Serial.print(" ROLITA ALGUIEN: ");
+    Serial.println (rolita_random);
+
+    Serial.print("volume: ");
+    Serial.println (vol_random);
+
+    MP3player.stopTrack();
+    MP3player.playTrack(rolita_random);
+    MP3player.setVolume(20, 20);
+
+  } else {
+    //digitalWrite(dataSend, LOW);
+  }
+  count++;
+  delay(1000);
+
+}

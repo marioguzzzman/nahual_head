@@ -7,6 +7,8 @@
 //si no hay nadie apaga motores.
 
 boolean hay_alguien;
+boolean hay_musica;
+
 boolean ver_distancia = true;
 boolean manual = true;
 
@@ -15,6 +17,8 @@ int distanciaPersona = 15;
 // send data to Touchboard
 int count;
 int dataSend = 2;
+int dataIn = 3;
+
 
 //-------------------------------------MOTORES
 #include <AFMotor.h>
@@ -49,9 +53,17 @@ int distance; // variable for the distance measurement
 void setup()
 {
 
-  pinMode(dataSend, OUTPUT);
+  // initialize digital pin LED_BUILTIN as an output.
+  pinMode(LED_BUILTIN, OUTPUT);
 
-   // Setup serial monitor
+
+  //send data
+  pinMode(dataSend, OUTPUT);
+  //Receive data
+  pinMode(dataIn, INPUT);
+
+
+  // Setup serial monitor
   Serial.begin(9600);
 
   //-----------------------------------------MOTOR
@@ -65,7 +77,6 @@ void setup()
   pinMode (echoPin, INPUT);
 
   Serial.println("Ultrasonic Sensor HC-SR04 Test"); // print some text in Serial Monitor
-  Serial.println("with Arduino UNO R3");
 }
 
 //--------------------------------------------------LOOP
@@ -74,24 +85,19 @@ void setup()
 void loop()
 {
 
- //testSendData();
+  checkdata();
 
-  //  motor.setSpeed(200);
-
-  //   //Set controlled speed of the motor & stop
-  //    motor.setSpeed(minSpeed);       //-------------------------------------MOTOR ALGUIEN
-  //    // Turn on motor
-  //  motor.run(BACKWARD);
-
+  //testSendData();
 
   sensordistancia();
 
-  if (distance < distanciaPersona) {
+  //if (myVal > lowerBound && myVal < upperBound) {
+  if (distance > 2 && distance < distanciaPersona) {
     hay_alguien = true;
     //enciendo motores
-     digitalWrite(dataSend, HIGH); //Envio info a touchboard desde digitalpin 2
+    digitalWrite(dataSend, HIGH); //Envio info a touchboard desde digitalpin 2
 
-  } else if (distance > distanciaPersona) {
+  } else {
     hay_alguien = false;
     //apago motores
 
@@ -143,7 +149,9 @@ void loop()
     delay(1);        // delay in between reads for stability
 
 
-  } else { //------------------------ NADIE
+  } else if (hay_alguien == false || hay_musica == true) { //------------------------ NADIE
+
+    //if nadie or music is paying
     Serial.print("................NADIE ");
     delay(1);        // delay in between reads for stability
 
@@ -152,8 +160,22 @@ void loop()
     // Turn on motor
     motor.run(BACKWARD);
 
+    digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level)
+    delay(250);                       // wait for a second
+
+
+  } else if (hay_musica == false) {
+    // sigue tocando
+    Serial.print("................SILENCIO ");
+    digitalWrite(LED_BUILTIN, LOW);    // turn the LED off by making the voltage LOW
+    delay(250);
+
   }
 }
+
+//---------------------------------------
+//------------------ END LOOP -----------
+//---------------------------------------
 
 void sensordistancia () {
   // boolean vuelve = false;
@@ -173,21 +195,40 @@ void sensordistancia () {
 }
 
 void testSendData() {
-  if (count % 10 == 0) {
+  if (count % 30 == 0) {
     //Serial.println('a');
-//    digitalWrite(2, HIGH);
-        digitalWrite(dataSend, HIGH);
-        //Serial.println("mando data");
-        //Serial.println(digitalWrite(2));
+    //    digitalWrite(2, HIGH);
+    digitalWrite(dataSend, HIGH);
+    //Serial.println("mando data");
+    //Serial.println(digitalWrite(2));
 
-        //delay(1000);
+    //delay(1000);
 
-      //delay(250);
+    //delay(250);
   } else {
-   // digitalWrite(sendPin, LOW);
+    // digitalWrite(sendPin, LOW);
     digitalWrite(dataSend, LOW);
-//delay(2000);
+    //delay(2000);
   }
   count++;
-    delay(100);
+  delay(100);
+}
+
+//----------------------------CHECK DATA
+void checkdata() {
+
+  if (digitalRead(dataIn) == 0) {
+    hay_musica = true;
+    Serial.println("------HAY MUSICA");
+
+//    rolita_alguien();
+
+  } else if (digitalRead(dataIn) == 1) {
+    hay_musica = false;
+    Serial.println("------SILENCIO");
+
+  }
+
+  Serial.println(digitalRead(dataIn));
+
 }
