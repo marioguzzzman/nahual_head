@@ -238,16 +238,17 @@ void checkdata() {
 
   if (digitalRead(inPin) == 1) {
     digitalWrite(13, HIGH);
-    hay_alguien = false;
+    hay_alguien = true;
     Serial.println("------HAY ALGUIEN");
 
     rolita_alguien();
 
   } else if (digitalRead(inPin) == 0) {
     digitalWrite(13, LOW);
-    hay_alguien = true;
+    hay_alguien = false;
+
     Serial.println("------NADIE");
-        rolita_alguien();
+    //rolita_alguien();
 
 
   }
