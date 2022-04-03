@@ -113,9 +113,6 @@ void setup() {
   //Send data
   pinMode(outPin, OUTPUT);
 
-  //  Wire.begin(4);                // join i2c bus with address #4
-  //  //  Wire.onReceive(receiveEvent); // register event
-  //
   //pinMode (13, OUTPUT);//Connect LED to pin 13
   //  Wire.begin(9);//9 here is the address(Mentioned even in the master board code)
   //  Wire.onReceive(receiveEvent);
@@ -381,7 +378,7 @@ void timer_rolita() {
 
 
 void rolita_alguien() {
-  if (count % 30 == 0) {
+  if (count % 15 == 0) {
     //digitalWrite(dataSend, HIGH);
 
     // if analog input pin 0 is unconnected, random analog
