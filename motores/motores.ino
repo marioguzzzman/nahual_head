@@ -87,7 +87,7 @@ void loop()
 
   checkdata();
 
-  //testSendData();
+  testSendData();
 
   sensordistancia();
 
@@ -195,12 +195,11 @@ void sensordistancia () {
 }
 
 void testSendData() {
-  if (count % 30 == 0) {
+  if (count % 10 == 0) {
     //Serial.println('a');
-    //    digitalWrite(2, HIGH);
+    //    digitalWrite(, HIGH);
     digitalWrite(dataSend, HIGH);
-    //Serial.println("mando data");
-    //Serial.println(digitalWrite(2));
+    Serial.println("mando data");
 
     //delay(1000);
 
@@ -212,18 +211,20 @@ void testSendData() {
   }
   count++;
   delay(100);
+   //   Serial.println(digitalWrite(dataSend));
+
 }
 
 //----------------------------CHECK DATA
 void checkdata() {
 
-  if (digitalRead(dataIn) == 0) {
+  if (digitalRead(dataIn) == 1) {
     hay_musica = true;
     Serial.println("------HAY MUSICA");
 
 //    rolita_alguien();
 
-  } else if (digitalRead(dataIn) == 1) {
+  } else if (digitalRead(dataIn) == 0) {
     hay_musica = false;
     Serial.println("------SILENCIO");
 
