@@ -1,7 +1,5 @@
 # La conciencia es el precocimiento de la mente universal / Consciousness Is the Foreknowledge of the Universal Mind (2022)
 
-An interactive sound sculpture: a ceramic head suspended from a wooden mast senses a visitor's presence, moves, and responds with a machine-generated voice — the closer you bring your own head, the more it speaks.
-
 *Ancestral AI / experimental lutherie / techno-chamanism / sound sculpture*
 
 [![Video documentation of the piece](https://img.youtube.com/vi/ASrmGYQaXNI/maxresdefault.jpg)](https://www.youtube.com/watch?v=ASrmGYQaXNI)
