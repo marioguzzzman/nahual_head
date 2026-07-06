@@ -55,11 +55,3 @@ Requires the physical hardware — a Bare Conductive Touch Board, an Arduino UNO
 3. Put twelve MP3s named `TRACK000.mp3`–`TRACK011.mp3` in the root of the Touch Board's microSD card — these are the piece's voice.
 4. Flash `touch_mp3_with_leds_V2` to the Touch Board and `motores` to the Arduino. Wire the two signal lines (Arduino pin 2 → Touch Board pin 11; Touch Board pin 10 → Arduino pin 3) and the HC-SR04 on A0/A1.
 5. Calibrate electrodes with `DataStream_nahual` + the Max patch if touch response drifts (new enclosure, humidity, paint).
-
-## Status & caveats
-
-**Archived** — built January–April 2022 for the biennial; last commit April 2022. It is exhibition code, not a library: thresholds, pins, and distances are hard-coded to one specific sculpture. Timing behavior (`tiempo_rolita_random`, the `count % 15` presence trigger) was tuned by ear in situ. The `hay_musica` branch in `motores.ino` is wired but the motor reacts only to presence in the current version.
-
-## Credits & license
-
-Piece by **Mario Guzmán** (Mario Alberto Guzmán Cerdio). Touch Board sketches are based on Bare Conductive's MIT-licensed examples ([touch_mp3_with_leds](https://github.com/BareConductive/touch_mp3_with_leds), [prox-volume](https://github.com/BareConductive/prox-volume)); `installers/` and the Max patch are Bare Conductive's, under their own licenses. License for this repo: MIT suggested (matches upstream) — pending.
